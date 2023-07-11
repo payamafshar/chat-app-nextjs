@@ -1,17 +1,25 @@
 import { NextPage } from "next"
 import Link from "next/link"
+import { useForm } from "react-hook-form"
 
 
 const Login: NextPage = () => {
+
+  const {register,handleSubmit,formState:{errors}} = useForm()
+
+  console.log(errors)
+  const onSubmit =() => {
+
+  }
     return (
-      <div className="h-screen flex justify-center items-center">
+      <form onSubmit={handleSubmit(onSubmit)} className="h-screen flex justify-center items-center">
       
       <div className="w-2/5  h-2/5 flex flex-col ">
 
         <label htmlFor="email" className="text-textInner text-xs font-semibold">Email</label>
-        <input id="email" name="email" className="w-full text-textInner outline-none focus:ring-buttonBgDark focus:ring-1 p-3 bg-inputBgDark  rounded-md " />
-        <label htmlFor="password" className="text-textInner text-xs font-semibold">Password</label>
-        <input id="password" name="password" className=" text-textInner outline-none focus:ring-buttonBgDark focus:ring-1 w-full mb-2 p-3 bg-inputBgDark  rounded-md  " />
+        <input  id="email" {...register('email',{required:true})} className="w-full text-textInner outline-none focus:ring-buttonBgDark focus:ring-1 p-3 bg-inputBgDark  rounded-md " />
+        <label  htmlFor="password" className="text-textInner text-xs font-semibold">Password</label>
+        <input id="password" {...register('password',{required:true})} className=" text-textInner outline-none focus:ring-buttonBgDark focus:ring-1 w-full mb-2 p-3 bg-inputBgDark  rounded-md  " />
           
 
         <button className="w-full bg-buttonBgDark text-textInner p-3 font-bold rounded-md">Login to account  </button>
@@ -25,7 +33,7 @@ const Login: NextPage = () => {
         </div>
       </div>
         
-      </div>
+      </form>
     )
   }
   
