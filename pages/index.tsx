@@ -1,14 +1,24 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import CoversationSideBar from '../components/conversation/ConversationSideBar'
+import ConversationContent from '../components/conversation/ConversationContent'
+
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-slate-600">
-      hello
+   <>
+   
+   <div className='flex justify-center items-center w-full h-screen'>
+
+    <CoversationSideBar />
+    <ConversationContent />
+
+   </div>
+   
+   
+   </>
+
       
-    </div>
+
   )
 }
 
