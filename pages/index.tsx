@@ -3,7 +3,10 @@ import CoversationSideBar from '../components/conversation/ConversationSideBar'
 import ConversationContent from '../components/conversation/ConversationContent'
 
 
+
 const Home: NextPage = () => {
+
+
   return (
    <>
    
@@ -14,6 +17,7 @@ const Home: NextPage = () => {
 
    </div>
    
+  
    
    </>
 

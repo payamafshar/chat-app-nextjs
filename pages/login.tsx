@@ -12,12 +12,12 @@ const Login: NextPage = () => {
   const {mutateAsync,isLoading,isError} = useLogin()
   const onSubmit =async (params:LoginUserParams) => {
 try {
-  const {data,status} = await mutateAsync(params)
+  const {data,status,} = await mutateAsync(params)
 
   console.log({data,status,isError})
   if(data?.statusCode == 200) router.push('/')
 } catch (error) {
-  console.log(error.message)
+  console.log(error)
 }
   }
     return (

@@ -16,7 +16,7 @@ module.exports = {
       inputBgDark: "#3f3f46",
       buttonBgDark: "#1d4ed8",
       textInner: "#d4d4d8",
-      graySmooth: "#9ca3af",
+      white: "#9ca3af",
       blackSmooth: "#1f2937",
     },
   },
