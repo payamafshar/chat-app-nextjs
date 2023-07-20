@@ -1,5 +1,7 @@
 import React from "react"
-import { Conversation } from "../../seed/convarsatioonData"
+import { Conversation } from "../../utils/types/types"
+import { useRouter } from "next/router"
+import Link from "next/link"
 
 type Props = {
 
@@ -8,15 +10,21 @@ type Props = {
 
 const ConversationSideBarItem : React.FC<Props> =( {conversation}) => {
 
-    const { id , name} = conversation
-    return <div className="flex mt-4 ">
+    const router = useRouter()
+
+    
+
+    const { id ,recipient} = conversation
+    return <Link href={`/${id}`} >
+     <div className="flex mt-4 " >
      <div className="bg-buttonBgDark w-12 h-12 rounded-full"></div>
     <div className="flex flex-col ml-3 justify-evenly">
-        <span className="font-bold text-sm text-textInner">{name}</span>
+        <span className="font-bold text-sm text-textInner">{recipient.username}</span>
         <span className="text-xs text-graySmooth">hello how are u ?</span>
     </div>
     
     </div>
+    </Link>
 }
 
 

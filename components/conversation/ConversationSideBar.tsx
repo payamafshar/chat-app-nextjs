@@ -1,21 +1,38 @@
 import { NextPage } from "next";
 import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import ConversationSideBarItem from "./ConversationSideBarItem";
-import { conversationData } from "../../seed/convarsatioonData";
 import TransitionsModal from "../modal/Modal";
+import { useEffect, useState } from "react";
+import { getConversations } from "../../utils/services/conversationService";
+import { Conversation } from "../../utils/types/types";
 
 
 
 
 const CoversationSideBar  = () => {
 
+  const [show,setShow] = useState(false)
+  const [conversationData,setConversationData] = useState<Conversation[]>([])
+  //change when add redux
+  useEffect(()=>{
 
+    try {
+        getConversations().then(res =>setConversationData(res.data) ).catch(err => console.log(err))
+    } catch (error) {
+      
+    }
 
-    return <aside className="bg-inputBgDark w-1/4 h-full overflow-y-scroll ">
+  },[])
+ 
+
+    return <aside className={`bg-inputBgDark w-full h-full overflow-y-scroll ` }>
 
 
      <div className="flex justify-between  p-6 sticky  bg-blackSmooth  top-0">
+       <div className="flex ">
+
         <p className="text-lg font-bold text-textInner">Coversations</p>
+       </div>
         <span className="">
            
             <TransitionsModal />
@@ -27,7 +44,7 @@ const CoversationSideBar  = () => {
        {
 
 
-       conversationData.map(item => <ConversationSideBarItem  conversation={item}/>)
+       conversationData?.map(item => <ConversationSideBarItem  conversation={item}/>)
 
 
        }
