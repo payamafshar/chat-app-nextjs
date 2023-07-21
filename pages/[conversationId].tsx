@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { getConversationById } from "../utils/services/conversationService";
 import { Conversation, MessageType } from "../utils/types/types";
 import { getMessagesFromConversation } from "../utils/services/messageService";
+import ConversationMessage from "../components/conversation/ConversationMessage";
 
 
 const ConversationChanellPage  =() => {
@@ -40,10 +41,10 @@ const ConversationChanellPage  =() => {
       </div>
 
   {/* Conversation Body */}
-      <div className="bg-buttonBgDark w-full h-full flex justify-center items-center">
+      <div className="bg-blackSmooth w-full h-full flex flex-col justify-end items-start px-1">
 
           {
-            messages?.map(item => <div className="bg-white  flex justify-center items-center text-blackSmooth">{item.content}</div>)
+            messages?.map(item => <ConversationMessage conversationMessage = {item} />)
           }
 
       </div>
