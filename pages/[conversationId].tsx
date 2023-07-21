@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { getConversationById } from "../utils/services/conversationService";
 import { Conversation, MessageType } from "../utils/types/types";
 import { getMessagesFromConversation } from "../utils/services/messageService";
-import ConversationMessage from "../components/conversation/ConversationMessage";
+import ConversationMessage from "../components/messages/ConversationMessage";
 
 
 const ConversationChanellPage  =() => {
@@ -26,12 +26,8 @@ const ConversationChanellPage  =() => {
   },[conversationId,router.query])
 
 
-    return <div className="grid grid-cols-12 grid-rows-6 w-full h-screen">
-         <div className='col-span-12 row-span-6 h-full'>
-
-    <aside className="w-full h-full bg-white flex flex-col">
-      {/* Conversation Header */}
-      <div className="bg-blackSmooth p-5 fixed w-full flex justify-between items-center top-0">
+    return <div className="h-full flex flex-col w-full ">
+     <div className="bg-blackSmooth h-[70px]  p-5 sticky w-full flex justify-between items-center   top-0">
         <TemporaryDrawer />
         <p className="text-textInner text-lg font-bold">
           {
@@ -39,27 +35,31 @@ const ConversationChanellPage  =() => {
           }
         </p>
       </div>
+       
+       
+         
+    <aside className="w-full   bg-white  h-full   ">
+   
 
-  {/* Conversation Body */}
-      <div className="bg-blackSmooth w-full h-full flex flex-col justify-end items-start px-1">
+      <div className="bg-blackSmooth w-full h-full flex flex-col flex-1s    justify-end items-start px-1  ">
 
-          {
-            messages?.map(item => <ConversationMessage conversationMessage = {item} />)
-          }
 
+         <ConversationMessage  messages={messages} /> 
+ 
       </div>
 
-{/* Conversation input */}
-      <div className="bg-blackSmooth w-full h-[100px]  p-2  relative bottom-0 ">
-        <div className="fixed w-11/12 h-[100px]">
-
-       <input placeholder="Write Message ..." className=" w-full p-5 ml-5  bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
-        </div>
-      </div>
+      
 
     </aside>
-    </div>
-    </div>
+   
+   
+    <div className="bg-blackSmooth w-full h-[70px] overflow-hidden  p-2 flex justify-start  sticky bottom-0 ">
+     <div className=" w-11/12 ">
+
+     <input placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
+     </div>
+   </div>
+   </div> 
 
 }
 
