@@ -25,7 +25,7 @@ const CoversationSideBar  = () => {
   },[])
  
 
-    return <aside className={`bg-inputBgDark w-full h-full overflow-y-scroll ` }>
+    return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll ` }>
 
 
      <div className="flex justify-between  p-6 sticky  bg-blackSmooth  top-0">
@@ -39,7 +39,7 @@ const CoversationSideBar  = () => {
         </span>
      </div>
 
-     <div className=" flex h-full flex-col justify-start px-6 ">
+     <div className="  h-full flex-1 flex-col justify-start px-6 ">
        
        {
 
@@ -48,6 +48,7 @@ const CoversationSideBar  = () => {
 
 
        }
+     
     
 
      </div>

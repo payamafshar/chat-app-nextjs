@@ -22,7 +22,7 @@ const Register: NextPage = () => {
 
        await postRegisterUser(params).then(res => {
         console.log(res.data)
-        router.push('/login')
+        router.push('/')
       }).catch(err => console.log(err))
 
       
@@ -41,11 +41,11 @@ const Register: NextPage = () => {
         <div className="flex justify-center items-center gap-x-2 w-full ">
            <div className="flex flex-col w-2/4">
            <label htmlFor="firstname" className="text-white text-xs font-semibold">FirstName</label>
-            <input id="firstname"  {...register('firstName',{required:'firstname is required'})} className=" p-3 bg-inputBgDark rounded-md outline-none font-semibold"/>
+            <input id="firstname"  {...register('firstName',{required:'firstname is required'})} className=" p-3 bg-inputBgDark text-textInner rounded-md outline-none font-semibold"/>
            </div>
            <div className="flex flex-col w-2/4">
            <label htmlFor="lastname" className="text-white text-xs font-semibold ">LastName</label>
-            <input id="lastname"  {...register('lastName',{required:'lastname is required'})} className=" p-3 bg-inputBgDark rounded-md outline-none font-semibold" />
+            <input id="lastname"  {...register('lastName',{required:'lastname is required'})} className=" p-3 bg-inputBgDark text-textInner rounded-md outline-none font-semibold" />
            </div>
         </div>
         <label htmlFor="password" className="text-white text-xs font-semibold ">Password</label>

@@ -8,6 +8,7 @@ import { getConversationById } from "../utils/services/conversationService";
 import { Conversation, MessageType } from "../utils/types/types";
 import { getMessagesFromConversation } from "../utils/services/messageService";
 import ConversationMessage from "../components/messages/ConversationMessage";
+import CoversationSideBar from "../components/conversation/ConversationSideBar";
 
 
 const ConversationChanellPage  =() => {
@@ -26,9 +27,13 @@ const ConversationChanellPage  =() => {
   },[conversationId,router.query])
 
 
-    return <div className="h-full flex flex-col w-full ">
-     <div className="bg-blackSmooth h-[70px]  p-5 sticky w-full flex justify-between items-center   top-0">
-        <TemporaryDrawer />
+    return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
+
+  <div className=" col-span-3 row-span-6 flex-col     ">
+    <CoversationSideBar />
+  </div>
+
+  <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
         <p className="text-textInner text-lg font-bold">
           {
             user?.username
@@ -37,28 +42,31 @@ const ConversationChanellPage  =() => {
       </div>
        
        
-         
-    <aside className="w-full   bg-white  h-full   ">
+         <div className="col-span-9 row-span-6  flex flex-col justify-start items-start bg-buttonBgDark overflow-y-scroll  ">
+         <aside className=" w-full    bg-blackSmooth    ">
    
 
-      <div className="bg-blackSmooth w-full h-full flex flex-col flex-1s    justify-end items-start px-1  ">
+   <div className="bg-blackSmooth w-full  flex flex-col    justify-start items-start px-1  ">
 
 
-         <ConversationMessage  messages={messages} /> 
- 
-      </div>
+      <ConversationMessage  messages={messages} /> 
 
-      
+   </div>
 
-    </aside>
    
-   
-    <div className="bg-blackSmooth w-full h-[70px] overflow-hidden  p-2 flex justify-start  sticky bottom-0 ">
+
+ </aside> 
+ <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
      <div className=" w-11/12 ">
 
      <input placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
      </div>
    </div>
+         </div>
+ 
+   
+   
+
    </div> 
 
 }
