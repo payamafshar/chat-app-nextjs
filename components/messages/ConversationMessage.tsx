@@ -70,7 +70,7 @@ const ConversationMessage :React.FC<Props> =  ({messages}) => {
     })
   }
 
-    return <div className="  bg-inputBgDark w-full flex   flex-col  justify-end items-start px-1  ">
+    return <div className="py-6 h-screen bg-inputBgDark w-full flex   flex-col  justify-end items-start px-1  ">
         {mapMessage()}
     </div>
         
