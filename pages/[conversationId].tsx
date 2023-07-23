@@ -73,7 +73,7 @@ const ConversationChanellPage  =() => {
   </div>
 
   <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
-        <p className="text-textInner bg-white text-lg font-bold">
+        <p className="text-textInner  text-lg font-bold">
           {
             user?.username 
           }
@@ -81,10 +81,10 @@ const ConversationChanellPage  =() => {
       </div>
        
        
-         <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  ">
+         <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  scrollbar ">
    
 
-   <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1  ">
+   <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
 
 
       <ConversationMessage  messages={messages} /> 
@@ -96,7 +96,7 @@ const ConversationChanellPage  =() => {
  <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
      <form onSubmit={handleSubmitMessage} className=" w-11/12 ">
 
-     <input value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
+     <input value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
      </form>
    </div>
          </div>

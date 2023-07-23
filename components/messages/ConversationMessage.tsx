@@ -31,9 +31,9 @@ const ConversationMessage :React.FC<Props> =  ({messages}) => {
 
         if(currentMessage.author.id == nextMessage.author.id) {
 
-            return  <div className=" flex flex-col-reverse   justify-end items-center p-2 px-12   "> 
+            return  <div className=" flex flex-col-reverse   justify-end items-center mb-2 px-12    "> 
               
-               <div className="text-textInner px-12  ml-3">
+               <div className="text-textInner px-10 ml-3">
                 {message.content}
             </div>
             
