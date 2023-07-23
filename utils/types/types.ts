@@ -37,3 +37,8 @@ export type MessageType = {
   // conversation: Conversation;
   // attachments?: MessageAttachment[];
 };
+
+export type MessageEventPayload = {
+  content: MessageType;
+  conversation: Conversation;
+};

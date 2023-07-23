@@ -1,19 +1,21 @@
 
 import { NextPage } from "next";
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { useAuth } from "../utils/hooks/useAuth";
 import TemporaryDrawer from "../components/drawer/Drawer";
 import { useRouter } from "next/router";
 import { getConversationById } from "../utils/services/conversationService";
-import { Conversation, MessageType } from "../utils/types/types";
+import { Conversation, MessageEventPayload, MessageType } from "../utils/types/types";
 import { getMessagesFromConversation } from "../utils/services/messageService";
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
+import { SocketContext } from "../utils/context/SocketContext";
 
 
 const ConversationChanellPage  =() => {
   const {user , loading} = useAuth()
-  const [messages,setMessages] = useState<MessageType[]>([])
+  const [messages,setMessages] = useState<MessageType[] >([])
+  const socket = useContext(SocketContext)
   const router = useRouter()
   const {conversationId} = router.query  
 
@@ -23,9 +25,26 @@ const ConversationChanellPage  =() => {
     getMessagesFromConversation(id).then(({data}) => setMessages(data)).catch(err => console.log(err))
 
 
-
+    console.log('hello')
   },[conversationId,router.query])
 
+  useEffect(()=>{
+
+console.log(router.query)
+    socket.on('onMessage',(payload:any) => {
+      console.log(payload)
+      const { conversation , content} = payload
+
+      console.log(content)
+      setMessages((prev) => [payload ,...prev ])
+
+    })
+
+    return () => {
+      socket.off('onMessage')
+    }
+
+  },[])
 
     return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
@@ -34,9 +53,9 @@ const ConversationChanellPage  =() => {
   </div>
 
   <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
-        <p className="text-textInner text-lg font-bold">
+        <p className="text-textInner bg-white text-lg font-bold">
           {
-            user?.username
+            user?.username 
           }
         </p>
       </div>

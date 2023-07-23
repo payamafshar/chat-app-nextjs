@@ -9,7 +9,6 @@ const Home: NextPage = () => {
 
   const {user,loading} = useAuth()
 
-  console.log(user)
   return (
    <>
    

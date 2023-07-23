@@ -10,17 +10,16 @@ const Login: NextPage = () => {
   const router = useRouter()
   const {register,handleSubmit,formState:{errors}} = useForm<LoginUserParams>()
   const onSubmit =async (params:LoginUserParams) => {
-try {
 
-  await postLoginUser(params).then((res) => {
+
+   postLoginUser(params).then((res) => {
 
     console.log(res.data)
     router.push('/')
   }).catch(err => console.log(err))
 
-} catch (error) {
-  console.log(error)
-}
+
+
   }
     return (
 
