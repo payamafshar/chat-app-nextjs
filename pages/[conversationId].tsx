@@ -42,11 +42,10 @@ const ConversationChanellPage  =() => {
       </div>
        
        
-         <div className="col-span-9 row-span-6  flex flex-col justify-start items-start bg-buttonBgDark overflow-y-scroll  ">
-         <aside className=" w-full    bg-blackSmooth    ">
+         <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  ">
    
 
-   <div className="bg-blackSmooth w-full  flex flex-col    justify-start items-start px-1  ">
+   <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1  ">
 
 
       <ConversationMessage  messages={messages} /> 
@@ -55,7 +54,6 @@ const ConversationChanellPage  =() => {
 
    
 
- </aside> 
  <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
      <div className=" w-11/12 ">
 

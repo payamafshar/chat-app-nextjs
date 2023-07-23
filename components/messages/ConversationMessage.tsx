@@ -16,7 +16,7 @@ type FormatedProps= {
 const  FormatedMessage : React.FC<FormatedProps> = ({user,message})  =>  {
 
     return (
-        <div className="flex flex-col px-12  justify-end items-center "> 
+        <div className=" flex flex-col px-12  justify-end items-center "> 
 
         <div className="flex justify-center items-center">
             <div className="h-12 w-12 rounded-full bg-buttonBgDark"></div>
@@ -70,7 +70,7 @@ const ConversationMessage :React.FC<Props> =  ({messages}) => {
     })
   }
 
-    return <div className="py-6 h-screen bg-inputBgDark w-full flex   flex-col  justify-end items-start px-1  ">
+    return <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col  justify-end items-start px-1 ">
         {mapMessage()}
     </div>
         
