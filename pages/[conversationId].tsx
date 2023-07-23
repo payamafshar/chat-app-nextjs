@@ -5,8 +5,8 @@ import { useAuth } from "../utils/hooks/useAuth";
 import TemporaryDrawer from "../components/drawer/Drawer";
 import { useRouter } from "next/router";
 import { getConversationById } from "../utils/services/conversationService";
-import { Conversation, MessageEventPayload, MessageType } from "../utils/types/types";
-import { getMessagesFromConversation } from "../utils/services/messageService";
+import { Conversation, MessageEventPayload, MessageType, CreateMessageParams } from "../utils/types/types";
+import { createMessage, getMessagesFromConversation } from "../utils/services/messageService";
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
 import { SocketContext } from "../utils/context/SocketContext";
@@ -15,6 +15,7 @@ import { SocketContext } from "../utils/context/SocketContext";
 const ConversationChanellPage  =() => {
   const {user , loading} = useAuth()
   const [messages,setMessages] = useState<MessageType[] >([])
+  const [msg,setMsg] = useState<string>('')
   const socket = useContext(SocketContext)
   const router = useRouter()
   const {conversationId} = router.query  
@@ -30,7 +31,6 @@ const ConversationChanellPage  =() => {
 
   useEffect(()=>{
 
-console.log(router.query)
     socket.on('onMessage',(payload:any) => {
       console.log(payload)
       const { conversation , content} = payload
@@ -45,6 +45,26 @@ console.log(router.query)
     }
 
   },[])
+
+  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+
+    setMsg(event.target.value)
+
+  }
+
+  const handleSubmitMessage =async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const convNumber = Number(conversationId)
+    const data = {conversationId:convNumber,content:msg}
+    try {
+     await createMessage(data)
+     setMsg('')
+    } catch (error) {
+      console.log(error)
+    }
+    
+
+  }
 
     return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
@@ -74,10 +94,10 @@ console.log(router.query)
    
 
  <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
-     <div className=" w-11/12 ">
+     <form onSubmit={handleSubmitMessage} className=" w-11/12 ">
 
-     <input placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
-     </div>
+     <input value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
+     </form>
    </div>
          </div>
  
