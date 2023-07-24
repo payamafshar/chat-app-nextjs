@@ -5,26 +5,27 @@ import TransitionsModal from "../modal/Modal";
 import { useEffect, useState } from "react";
 import { getConversations } from "../../utils/services/conversationService";
 import { Conversation } from "../../utils/types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchConversationThunk } from "../../store/conversations/thunkConversation";
+import { AppDispatch, RootState } from "../../store";
 
 
 
 
 const CoversationSideBar  = () => {
 
-  const [show,setShow] = useState(false)
-  const [conversationData,setConversationData] = useState<Conversation[]>([])
-  //change when add redux
   useEffect(()=>{
 
-    try {
-        getConversations().then(res =>setConversationData(res.data) ).catch(err => console.log(err))
-    } catch (error) {
-      
-    }
+    dispatch(fetchConversationThunk())
 
   },[])
- 
+  const [show,setShow] = useState(false)
 
+  const dispatch  = useDispatch<AppDispatch>()
+  
+  const {loading , conversations} = useSelector((state :RootState) => state.conversation)
+ 
+console.log(loading)
     return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>
 
 
@@ -42,9 +43,9 @@ const CoversationSideBar  = () => {
      <div className="  h-full flex-1 flex-col justify-start px-6 ">
        
        {
+        
 
-
-       conversationData?.map(item => <ConversationSideBarItem  conversation={item}/>)
+          conversations?.map(item => loading ? "loading ..." : <ConversationSideBarItem key={item.id} conversation={item}/>)
 
 
        }
