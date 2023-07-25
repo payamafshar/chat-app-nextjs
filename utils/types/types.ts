@@ -37,6 +37,10 @@ export type MessageType = {
   // conversation: Conversation;
   // attachments?: MessageAttachment[];
 };
+export type FetchMessagePayload = {
+  conversationId: number;
+  messages: MessageType[];
+};
 
 export type MessageEventPayload = {
   content: MessageType;
@@ -46,4 +50,9 @@ export type MessageEventPayload = {
 export type CreateMessageParams = {
   content: string;
   conversationId: number;
+};
+
+export type ConversationMessage = {
+  conversationId: number;
+  messages: MessageType[];
 };

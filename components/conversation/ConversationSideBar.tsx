@@ -25,7 +25,6 @@ const CoversationSideBar  = () => {
   
   const {loading , conversations} = useSelector((state :RootState) => state.conversation)
  
-console.log(loading)
     return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>
 
 

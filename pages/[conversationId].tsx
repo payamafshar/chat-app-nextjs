@@ -10,25 +10,24 @@ import { createMessage, getMessagesFromConversation } from "../utils/services/me
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
 import { SocketContext } from "../utils/context/SocketContext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
 
 
 const ConversationChanellPage  =() => {
   const {user , loading} = useAuth()
-  const [messages,setMessages] = useState<MessageType[] >([])
   const [msg,setMsg] = useState<string>('')
+  const dispatch = useDispatch <AppDispatch>()
   const socket = useContext(SocketContext)
   const router = useRouter()
   const {conversationId} = router.query  
 
   
-  useEffect(()=> {
-    const id = Number(conversationId)
-    getMessagesFromConversation(id).then(({data}) => setMessages(data)).catch(err => console.log(err))
 
+  const { messages , loading:messageLoading } = useSelector((state:RootState) => state.message)
 
-    console.log('hello')
-  },[conversationId,router.query])
-
+  console.log(messages)
   useEffect(()=>{
 
     socket.on('onMessage',(payload:any) => {
@@ -36,7 +35,7 @@ const ConversationChanellPage  =() => {
       const { conversation , content} = payload
 
       console.log(content)
-      setMessages((prev) => [payload ,...prev ])
+      // setMessages((prev) => [payload ,...prev ])
 
     })
 
@@ -87,7 +86,7 @@ const ConversationChanellPage  =() => {
    <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
 
 
-      <ConversationMessage  messages={messages} /> 
+      <ConversationMessage/> 
 
    </div>
 
