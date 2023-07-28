@@ -12,30 +12,30 @@ import CoversationSideBar from "../components/conversation/ConversationSideBar";
 import { SocketContext } from "../utils/context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
-import { fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
+import { createConversationMessageThunk, fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
+import { addMessages } from "../store/messages/messageSlice";
+import { updateConversation } from "../store/conversations/conversationSlice";
+import { fetchConversationThunk } from "../store/conversations/thunkConversation";
 
 
 const ConversationChanellPage  =() => {
   const {user , loading} = useAuth()
   const [msg,setMsg] = useState<string>('')
-  const dispatch = useDispatch <AppDispatch>()
   const socket = useContext(SocketContext)
   const router = useRouter()
   const {conversationId} = router.query  
-
+  const dispatch = useDispatch <AppDispatch>()
+  
+  const { conversations } = useSelector((state:RootState)=> state.conversation)
   
 
-  const { messages , loading:messageLoading } = useSelector((state:RootState) => state.message)
-
-  console.log(messages)
   useEffect(()=>{
 
-    socket.on('onMessage',(payload:any) => {
-      console.log(payload)
-      const { conversation , content} = payload
+    socket.on('onMessage',(payload: MessageEventPayload) => {
 
-      console.log(content)
-      // setMessages((prev) => [payload ,...prev ])
+      const {conversation } = payload
+      dispatch(addMessages(payload))
+      dispatch(updateConversation(conversation))
 
     })
 
@@ -55,12 +55,11 @@ const ConversationChanellPage  =() => {
     event.preventDefault()
     const convNumber = Number(conversationId)
     const data = {conversationId:convNumber,content:msg}
-    try {
-     await createMessage(data)
+
+     dispatch(createConversationMessageThunk(data))
+
      setMsg('')
-    } catch (error) {
-      console.log(error)
-    }
+   
     
 
   }
@@ -68,7 +67,7 @@ const ConversationChanellPage  =() => {
     return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
   <div className=" col-span-3 row-span-6 flex-col     ">
-    <CoversationSideBar />
+    <CoversationSideBar  />
   </div>
 
   <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">

@@ -19,13 +19,25 @@ const initialState: ConversationsState = {
 };
 
 export const conversationSlice = createSlice({
-  name: "conversations",
+  name: "conversationsSlice",
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     addConversation: (state, action: PayloadAction<Conversation>) => {
       console.log("addConversation");
       state.conversations.unshift(action.payload);
+    },
+
+    updateConversation: (state, action: PayloadAction<Conversation>) => {
+      console.log(action.payload);
+      const conversation = action.payload;
+
+      const findedConversationIndex = state.conversations.findIndex(
+        (c) => c.id === conversation.id
+      );
+
+      state.conversations.splice(findedConversationIndex, 1);
+      state.conversations.unshift(conversation);
     },
   },
 
@@ -44,7 +56,8 @@ export const conversationSlice = createSlice({
   },
 });
 
-export const { addConversation } = conversationSlice.actions;
+export const { addConversation, updateConversation } =
+  conversationSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectConversation = (state: RootState) =>

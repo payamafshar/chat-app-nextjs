@@ -8,23 +8,26 @@ import { Conversation } from "../../utils/types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchConversationThunk } from "../../store/conversations/thunkConversation";
 import { AppDispatch, RootState } from "../../store";
+import { useRouter } from "next/router";
+import { updateConversation } from "../../store/conversations/conversationSlice";
+
 
 
 
 
 const CoversationSideBar  = () => {
+  const dispatch  = useDispatch<AppDispatch>()
+
+  const router = useRouter()
 
   useEffect(()=>{
 
     dispatch(fetchConversationThunk())
 
   },[])
-  const [show,setShow] = useState(false)
 
-  const dispatch  = useDispatch<AppDispatch>()
-  
+
   const {loading , conversations} = useSelector((state :RootState) => state.conversation)
- 
     return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>
 
 
@@ -44,7 +47,9 @@ const CoversationSideBar  = () => {
        {
         
 
-          conversations?.map(item => loading ? "loading ..." : <ConversationSideBarItem key={item.id} conversation={item}/>)
+        conversations?.map(conversation => { 
+          return <ConversationSideBarItem key={conversation.id} conversation={conversation}/> 
+          })
 
 
        }

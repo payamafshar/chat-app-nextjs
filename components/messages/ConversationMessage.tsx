@@ -36,7 +36,7 @@ const ConversationMessage  =  () => {
 
  useEffect(() => {
 
-    console.log(messages)
+    console.log({messages})
  },[])
   const mapMessage = () => {
     const msg = messages.find(cm => cm.conversationId == Number(conversationId))

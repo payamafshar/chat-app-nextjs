@@ -34,7 +34,7 @@ export type MessageType = {
   content?: string;
   createdAt: string;
   author: User;
-  // conversation: Conversation;
+  conversation: Conversation;
   // attachments?: MessageAttachment[];
 };
 export type FetchMessagePayload = {
@@ -43,8 +43,8 @@ export type FetchMessagePayload = {
 };
 
 export type MessageEventPayload = {
-  content: MessageType;
   conversation: Conversation;
+  message: MessageType;
 };
 
 export type CreateMessageParams = {
