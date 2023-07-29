@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { createConversationMessageThunk, fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
 import { addMessages } from "../store/messages/messageSlice";
-import { updateConversation } from "../store/conversations/conversationSlice";
+import { selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
 import { fetchConversationThunk } from "../store/conversations/thunkConversation";
 
 
@@ -26,8 +26,9 @@ const ConversationChanellPage  =() => {
   const {conversationId} = router.query  
   const dispatch = useDispatch <AppDispatch>()
   
-  const { conversations } = useSelector((state:RootState)=> state.conversation)
-  
+  const speceficConversation = useSelector((state: RootState) =>
+  selectConversationById(state, Number(conversationId!))
+);
 
   useEffect(()=>{
 
@@ -39,8 +40,13 @@ const ConversationChanellPage  =() => {
 
     })
 
+    socket.on('connected' , (data)=> {
+      console.log('connected')
+      console.log(data)
+    })
     return () => {
       socket.off('onMessage')
+      socket.off('connected')
     }
 
   },[])
@@ -66,14 +72,14 @@ const ConversationChanellPage  =() => {
 
     return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
-  <div className=" col-span-3 row-span-6 flex-col     ">
+  <div className="col-span-3 row-span-6 flex-col ">
     <CoversationSideBar  />
   </div>
 
   <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
         <p className="text-textInner  text-lg font-bold">
           {
-            user?.username 
+            speceficConversation!.recipient.username 
           }
         </p>
       </div>

@@ -1,4 +1,4 @@
-import { Conversation } from "../types/types";
+import { Conversation, CreateConversationParams } from "../types/types";
 import http from "./httpService";
 
 export function getConversations() {
@@ -7,4 +7,7 @@ export function getConversations() {
 
 export function getConversationById(conversationId: number) {
   return http.get<Conversation>(`/conversation/${conversationId}`);
+}
+export function postCreateConversation(data: CreateConversationParams) {
+  return http.post("/conversation/createConversation", data);
 }

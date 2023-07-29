@@ -18,7 +18,7 @@ import { updateConversation } from "../../store/conversations/conversationSlice"
 const CoversationSideBar  = () => {
   const dispatch  = useDispatch<AppDispatch>()
 
-  const router = useRouter()
+  const {loading , conversations} = useSelector((state :RootState) => state.conversation)
 
   useEffect(()=>{
 
@@ -27,7 +27,6 @@ const CoversationSideBar  = () => {
   },[])
 
 
-  const {loading , conversations} = useSelector((state :RootState) => state.conversation)
     return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>
 
 

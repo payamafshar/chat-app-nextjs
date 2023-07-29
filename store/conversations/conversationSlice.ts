@@ -1,8 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../index";
 import { Conversation } from "../../utils/types/types";
-import { fetchConversationThunk } from "./thunkConversation";
+import {
+  createConversationThunk,
+  fetchConversationThunk,
+} from "./thunkConversation";
 
 // Define a type for the slice state
 export interface ConversationsState {
@@ -53,14 +56,22 @@ export const conversationSlice = createSlice({
       state.loading = false;
       state.error = "Oooops something unexpected went wrong";
     });
+    builder.addCase(createConversationThunk.fulfilled, (state, action) => {
+      state.conversations.unshift(action.payload.data);
+    });
   },
 });
 
 export const { addConversation, updateConversation } =
   conversationSlice.actions;
 
-// Other code such as selectors can use the imported `RootState` type
-export const selectConversation = (state: RootState) =>
+const selectConversations = (state: RootState) =>
   state.conversation.conversations;
+const selectConversationId = (state: RootState, id: number) => id;
+export const selectConversationById = createSelector(
+  [selectConversations, selectConversationId],
+  (conversations, conversationId) =>
+    conversations.find((c) => c.id === conversationId)
+);
 
 export default conversationSlice.reducer;

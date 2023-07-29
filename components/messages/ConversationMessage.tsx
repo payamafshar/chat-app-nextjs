@@ -52,7 +52,7 @@ const ConversationMessage  =  () => {
 
         if(currentMessage.author.id == nextMessage.author.id) {
 
-            return  <div className=" flex flex-col-reverse   justify-end items-center mb-2 px-12    "> 
+            return  <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-12    "> 
               
                <div className="text-textInner px-10 ml-3">
                 {message.content}
@@ -64,7 +64,7 @@ const ConversationMessage  =  () => {
     })
   }
 
-    return <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-end items-start px-1 ">
+    return <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">
         {mapMessage()}
     </div>
         

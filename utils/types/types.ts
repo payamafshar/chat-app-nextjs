@@ -29,6 +29,11 @@ export type Conversation = {
   lastMessageSent: MessageType;
 };
 
+export type CreateConversationParams = {
+  username: string;
+  message: string;
+};
+
 export type MessageType = {
   id: number;
   content?: string;
