@@ -39,7 +39,7 @@ export default function TransitionsModal() {
   }
   return (
     <div>
-    <PencilSquareIcon onClick={handleOpen} className="h-7 w-7 text-textInner font-bold text-lg" />
+    <PencilSquareIcon onClick={handleOpen} className="h-7 w-7 text-textInner cursor-pointer font-bold text-lg" />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

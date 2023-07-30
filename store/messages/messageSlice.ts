@@ -43,6 +43,8 @@ export const messagesSlice = createSlice({
       fetchConversationMessagesThunk.fulfilled,
       (state, action) => {
         const { conversationId, messages } = action.payload.data;
+
+        console.log({ fff: action.payload.data });
         const index = state.messages.findIndex(
           (cm) => cm.conversationId === conversationId
         );
@@ -50,6 +52,7 @@ export const messagesSlice = createSlice({
           (cm) => cm.conversationId === conversationId
         );
         if (exists) {
+          console.log("exists");
           state.messages[index] = action.payload.data;
         } else {
           state.messages.push(action.payload.data);

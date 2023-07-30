@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { createConversationMessageThunk, fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
 import { addMessages } from "../store/messages/messageSlice";
-import { selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
+import { addConversation, selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
 import { fetchConversationThunk } from "../store/conversations/thunkConversation";
 
 
@@ -29,7 +29,11 @@ const ConversationChanellPage  =() => {
   const speceficConversation = useSelector((state: RootState) =>
   selectConversationById(state, Number(conversationId!))
 );
+console.log(speceficConversation)
 
+const conversations= useSelector((state:RootState) => state.conversation.conversations)
+
+console.log(conversations)
   useEffect(()=>{
 
     socket.on('onMessage',(payload: MessageEventPayload) => {
@@ -39,6 +43,10 @@ const ConversationChanellPage  =() => {
       dispatch(updateConversation(conversation))
 
     })
+    // handle recipient create conversation realtime//* creator show conversation handled by redux
+    socket.on('onConversationCreate' , (payload:Conversation) => {
+        dispatch(addConversation(payload))
+    })
 
     socket.on('connected' , (data)=> {
       console.log('connected')
@@ -47,6 +55,7 @@ const ConversationChanellPage  =() => {
     return () => {
       socket.off('onMessage')
       socket.off('connected')
+      socket.off('onConversationCreate')
     }
 
   },[])
@@ -65,8 +74,6 @@ const ConversationChanellPage  =() => {
      dispatch(createConversationMessageThunk(data))
 
      setMsg('')
-   
-    
 
   }
 
@@ -79,7 +86,7 @@ const ConversationChanellPage  =() => {
   <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
         <p className="text-textInner  text-lg font-bold">
           {
-            speceficConversation!.recipient.username 
+           user?.id == speceficConversation?.creator.username ?  speceficConversation?.recipient.username : speceficConversation?.creator.username 
           }
         </p>
       </div>
