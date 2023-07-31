@@ -16,6 +16,8 @@ import { createConversationMessageThunk, fetchConversationMessagesThunk } from "
 import { addMessages } from "../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
 import { fetchConversationThunk } from "../store/conversations/thunkConversation";
+import { toggleContextMenu } from "../store/messageContainerSlice";
+import ContextMenu from "../components/contextMenu/ContextMenu";
 
 
 const ConversationChanellPage  =() => {
@@ -30,8 +32,10 @@ const ConversationChanellPage  =() => {
   selectConversationById(state, Number(conversationId!))
 );
 console.log(speceficConversation)
+const {showContextMenu} = useSelector((state:RootState) => state.messageContainer)
 
 const conversations= useSelector((state:RootState) => state.conversation.conversations)
+
 
 console.log(conversations)
   useEffect(()=>{
@@ -112,7 +116,7 @@ console.log(conversations)
    </div>
          </div>
  
-   
+         {showContextMenu && <ContextMenu/>}
    
 
    </div> 

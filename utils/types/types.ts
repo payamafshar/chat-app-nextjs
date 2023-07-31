@@ -61,3 +61,8 @@ export type ConversationMessage = {
   conversationId: number;
   messages: MessageType[];
 };
+
+export type Points = {
+  x: number;
+  y: number;
+};
