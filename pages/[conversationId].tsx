@@ -23,6 +23,9 @@ import ContextMenu from "../components/contextMenu/ContextMenu";
 const ConversationChanellPage  =() => {
   const {user , loading} = useAuth()
   const [msg,setMsg] = useState<string>('')
+  const [typing,setTyping] = useState(false)
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>()
+  const [recipientTyping , setRecipientTyping] = useState(false)
   const socket = useContext(SocketContext)
   const router = useRouter()
   const {conversationId} = router.query  
@@ -30,44 +33,93 @@ const ConversationChanellPage  =() => {
   const speceficConversation = useSelector((state: RootState) =>
   selectConversationById(state, Number(conversationId!))
 );
-const elemRef = useRef<HTMLDivElement>(null)
-
-
-
 
 
 
   useEffect(()=>{
+
+    console.log(conversationId)
+    socket.emit('onConversationJoin' ,  {conversationId})
+
+
+    socket.on('userJoin' , () => {
+      console.log('user Joined Conversation')
+    })
+    socket.on('userLeave' , () => {
+      console.log('user Leaved Conversation')
+    })
+
+
+    socket.on('userStartTyping' , () => {
+
+      console.log('user is typeing')
+      setRecipientTyping(true)
+      
+    })
+
+
+    socket.on('userStopTyping' , () => {
+
+      console.log('user is stop typeing')
+      setRecipientTyping(false)
+
+    })
+
 
     socket.on('onMessage',(payload: MessageEventPayload) => {
 
       const {conversation } = payload
       dispatch(addMessages(payload))
       dispatch(updateConversation(conversation))
-
     })
     // handle recipient create conversation realtime//* creator show conversation handled by redux
     socket.on('onConversationCreate' , (payload:Conversation) => {
         dispatch(addConversation(payload))
     })
 
-    socket.on('connected' , (data)=> {
-      console.log('connected')
-    })
-
+ 
     socket.on('onDeleteMessage' , (payload:DeleteMessageResponse) => {
-
       dispatch(deleteMessage(payload))
-
     } )
+
+
     return () => {
-      socket.off('onMessage')
+      socket.emit('onConversationLeave' , {conversationId})
       socket.off('connected')
       socket.off('onConversationCreate')
       socket.off('onDeleteMessage')
+      socket.off('userJoin')
+      socket.off('userLeave')
+      socket.off('userStopTyping')
+      socket.off('userStartTyping')
     }
 
-  },[])
+  },[conversationId])
+
+  const handleUserTyping = () => {
+    // fireing subscribe message Event On BackEnd and that event sendUser status typing
+    //on another event(userStartTyping, userStopTyping) and we listen that events to get recipient status
+    // on above useEffect beacuse on backEnd rooms emit event for connected user expet himself
+    if(typing) {
+      clearTimeout(timer)
+      setTimer(setTimeout(()=> {
+
+        console.log('user is stop ')
+        socket.emit('onTypingStop' , {conversationId})
+        setTyping(false)
+      },2000))
+
+    }else {
+      setTyping(true)
+      socket.emit('onTypingStart',{conversationId})
+      console.log('user is typing')
+
+    }
+
+  
+
+
+  }
 
   const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
 
@@ -116,8 +168,11 @@ const elemRef = useRef<HTMLDivElement>(null)
  <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
      <form onSubmit={handleSubmitMessage} className=" w-11/12 ">
 
-     <input value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
+     <input onKeyDown={handleUserTyping} value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
      </form>
+     {
+      recipientTyping && <div> typing... </div>
+     }
    </div>
          </div>
         <div  >
