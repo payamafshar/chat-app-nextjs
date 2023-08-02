@@ -10,6 +10,7 @@ import { fetchConversationThunk } from "../../store/conversations/thunkConversat
 import { AppDispatch, RootState } from "../../store";
 import { useRouter } from "next/router";
 import { updateConversation } from "../../store/conversations/conversationSlice";
+import { toggleContextMenu } from "../../store/messageContainerSlice";
 
 
 
@@ -17,14 +18,14 @@ import { updateConversation } from "../../store/conversations/conversationSlice"
 
 const CoversationSideBar  = () => {
   const dispatch  = useDispatch<AppDispatch>()
-
-  const {loading , conversations} = useSelector((state :RootState) => state.conversation)
-
+  const  conversations = useSelector((state :RootState) => state.conversation.conversations)
   useEffect(()=>{
 
     dispatch(fetchConversationThunk())
 
   },[])
+ 
+
 
 
     return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>

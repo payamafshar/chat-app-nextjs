@@ -1,11 +1,11 @@
 
 import { NextPage } from "next";
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useAuth } from "../utils/hooks/useAuth";
 import TemporaryDrawer from "../components/drawer/Drawer";
 import { useRouter } from "next/router";
 import { getConversationById } from "../utils/services/conversationService";
-import { Conversation, MessageEventPayload, MessageType, CreateMessageParams } from "../utils/types/types";
+import { Conversation, MessageEventPayload, MessageType, CreateMessageParams, DeleteMessageResponse } from "../utils/types/types";
 import { createMessage, getMessagesFromConversation } from "../utils/services/messageService";
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
@@ -13,7 +13,7 @@ import { SocketContext } from "../utils/context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { createConversationMessageThunk, fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
-import { addMessages } from "../store/messages/messageSlice";
+import { addMessages, deleteMessage } from "../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
 import { fetchConversationThunk } from "../store/conversations/thunkConversation";
 import { toggleContextMenu } from "../store/messageContainerSlice";
@@ -27,17 +27,16 @@ const ConversationChanellPage  =() => {
   const router = useRouter()
   const {conversationId} = router.query  
   const dispatch = useDispatch <AppDispatch>()
-  
   const speceficConversation = useSelector((state: RootState) =>
   selectConversationById(state, Number(conversationId!))
 );
-console.log(speceficConversation)
-const {showContextMenu} = useSelector((state:RootState) => state.messageContainer)
-
-const conversations= useSelector((state:RootState) => state.conversation.conversations)
+const elemRef = useRef<HTMLDivElement>(null)
 
 
-console.log(conversations)
+
+
+
+
   useEffect(()=>{
 
     socket.on('onMessage',(payload: MessageEventPayload) => {
@@ -54,12 +53,18 @@ console.log(conversations)
 
     socket.on('connected' , (data)=> {
       console.log('connected')
-      console.log(data)
     })
+
+    socket.on('onDeleteMessage' , (payload:DeleteMessageResponse) => {
+
+      dispatch(deleteMessage(payload))
+
+    } )
     return () => {
       socket.off('onMessage')
       socket.off('connected')
       socket.off('onConversationCreate')
+      socket.off('onDeleteMessage')
     }
 
   },[])
@@ -81,7 +86,7 @@ console.log(conversations)
 
   }
 
-    return <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
+    return <div  className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
   <div className="col-span-3 row-span-6 flex-col ">
     <CoversationSideBar  />
@@ -115,8 +120,8 @@ console.log(conversations)
      </form>
    </div>
          </div>
- 
-         {showContextMenu && <ContextMenu/>}
+        <div  >
+        </div>
    
 
    </div> 

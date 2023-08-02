@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import CoversationSideBar from '../components/conversation/ConversationSideBar'
-import ConversationContent from '../components/conversation/ConversationContent'
 import { useAuth } from '../utils/hooks/useAuth'
 
 
@@ -17,7 +16,7 @@ const Home: NextPage = () => {
    
     <div className='col-span-12 row-span-6 h-full'>
 
-    <ConversationContent />
+    helllo world
     </div>
 
    </div>

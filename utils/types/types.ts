@@ -66,3 +66,13 @@ export type Points = {
   x: number;
   y: number;
 };
+
+export type DeleteMessageParams = {
+  messageId: number;
+  conversationId: number;
+};
+
+export type DeleteMessageResponse = {
+  messageId: number;
+  conversationId: number;
+};
