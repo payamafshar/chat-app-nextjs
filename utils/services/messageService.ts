@@ -4,6 +4,7 @@ import {
   FetchMessagePayload,
   DeleteMessageParams,
   DeleteMessageResponse,
+  EditMessageParams,
 } from "../types/types";
 import http from "./httpService";
 
@@ -17,5 +18,11 @@ export function createMessage(data: CreateMessageParams) {
 export function deleteMessageApi(params: DeleteMessageParams) {
   return http.delete<DeleteMessageResponse>(
     `messages/${params.messageId}/conversation/${params.conversationId}`
+  );
+}
+export function patchEditMessageApi(params: EditMessageParams) {
+  return http.patch(
+    `messages/${params.messageId}/conversation/${params.conversationId}`,
+    { content: params.content }
   );
 }

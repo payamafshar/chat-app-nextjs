@@ -3,10 +3,12 @@ import {
   getMessagesFromConversation,
   createMessage,
   deleteMessageApi,
+  patchEditMessageApi,
 } from "../../utils/services/messageService";
 import {
   CreateMessageParams,
   DeleteMessageParams,
+  EditMessageParams,
 } from "../../utils/types/types";
 
 export const fetchConversationMessagesThunk = createAsyncThunk(
@@ -25,5 +27,11 @@ export const deleteMessageThunk = createAsyncThunk(
   "delete/message",
   async (params: DeleteMessageParams) => {
     return deleteMessageApi(params);
+  }
+);
+export const editMessageThunk = createAsyncThunk(
+  "edit/message",
+  async (params: EditMessageParams) => {
+    return patchEditMessageApi(params);
   }
 );

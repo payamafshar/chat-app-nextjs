@@ -3,14 +3,14 @@ import { MessageType, Points } from "../utils/types/types";
 
 export interface MessageContainerState {
   selectedMessage?: MessageType;
-  // messageBeingEdited?: MessageType;
-  // isEditingMessage: boolean;
+  messageBeingEdited?: MessageType;
+  isEditingMessage: boolean;
   showContextMenu: boolean;
   points: Points;
 }
 
 const initialState: MessageContainerState = {
-  // isEditingMessage: false,
+  isEditingMessage: false,
   showContextMenu: false,
   points: { x: 0, y: 0 },
 };
@@ -22,16 +22,16 @@ export const messageContainerSlice = createSlice({
     setSelectedMessage: (state, action) => {
       state.selectedMessage = action.payload;
     },
-    // setMessageBeingEdited: (state, action) => {
-    //   state.messageBeingEdited = action.payload;
-    // },
-    // setIsEditing: (state, action: PayloadAction<boolean>) => {
-    //   state.isEditingMessage = action.payload;
-    // },
-    // editMessageContent: (state, action) => {
-    //   if (state.messageBeingEdited)
-    //     state.messageBeingEdited.content = action.payload;
-    // },
+    setMessageBeingEdited: (state, action) => {
+      state.messageBeingEdited = action.payload;
+    },
+    setIsEditing: (state, action: PayloadAction<boolean>) => {
+      state.isEditingMessage = action.payload;
+    },
+    editMessageContent: (state, action) => {
+      if (state.messageBeingEdited)
+        state.messageBeingEdited.content = action.payload;
+    },
     // resetMessageContainer: (state) => {
     // state.isEditingMessage = false;
     // state.messageBeingEdited = undefined;
@@ -48,10 +48,10 @@ export const messageContainerSlice = createSlice({
 });
 
 export const {
-  // setIsEditing,
-  // setMessageBeingEdited,
+  setIsEditing,
+  setMessageBeingEdited,
   setSelectedMessage,
-  // editMessageContent,
+  editMessageContent,
   // resetMessageContainer,
   toggleContextMenu,
   setContextMenuLocation,

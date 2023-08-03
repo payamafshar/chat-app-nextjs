@@ -1,23 +1,16 @@
 
-import { NextPage } from "next";
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, {  useContext, useEffect,  useState } from 'react';
 import { useAuth } from "../utils/hooks/useAuth";
-import TemporaryDrawer from "../components/drawer/Drawer";
 import { useRouter } from "next/router";
-import { getConversationById } from "../utils/services/conversationService";
-import { Conversation, MessageEventPayload, MessageType, CreateMessageParams, DeleteMessageResponse } from "../utils/types/types";
-import { createMessage, getMessagesFromConversation } from "../utils/services/messageService";
+import { Conversation, MessageEventPayload, DeleteMessageResponse } from "../utils/types/types";
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
 import { SocketContext } from "../utils/context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
-import { createConversationMessageThunk, fetchConversationMessagesThunk } from "../store/messages/thunkMessages";
+import { createConversationMessageThunk } from "../store/messages/thunkMessages";
 import { addMessages, deleteMessage } from "../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
-import { fetchConversationThunk } from "../store/conversations/thunkConversation";
-import { toggleContextMenu } from "../store/messageContainerSlice";
-import ContextMenu from "../components/contextMenu/ContextMenu";
 
 
 const ConversationChanellPage  =() => {
@@ -38,7 +31,6 @@ const ConversationChanellPage  =() => {
 
   useEffect(()=>{
 
-    console.log(conversationId)
     socket.emit('onConversationJoin' ,  {conversationId})
 
 
