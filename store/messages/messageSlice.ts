@@ -8,6 +8,7 @@ import {
 import {
   createConversationMessageThunk,
   deleteMessageThunk,
+  editMessageThunk,
   fetchConversationMessagesThunk,
 } from "./thunkMessages";
 import { RootState } from "../index";
@@ -38,7 +39,7 @@ export const messagesSlice = createSlice({
 
       findedLocalConversation?.messages.unshift(message);
     },
-
+    // neeed for deleting message from recipient imeedietlly
     deleteMessage: (state, action: PayloadAction<DeleteMessageResponse>) => {
       const { conversationId, messageId } = action.payload;
 
@@ -92,6 +93,27 @@ export const messagesSlice = createSlice({
       );
 
       conversationMessages.messages.splice(findedMessageIndex, 1);
+    });
+    builder.addCase(editMessageThunk.fulfilled, (state, action) => {
+      console.log(action.payload.data);
+
+      const {
+        conversation: { id },
+        id: messageId,
+      } = action.payload.data;
+
+      const findedConversation = state.messages.find(
+        (c) => c.conversationId == id
+      );
+      if (!findedConversation) return;
+
+      const findedIndexMessageInLocalState =
+        findedConversation?.messages.findIndex(
+          (message) => message.id == messageId
+        );
+
+      findedConversation.messages[findedIndexMessageInLocalState] =
+        action.payload.data;
     });
   },
 });

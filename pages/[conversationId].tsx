@@ -69,7 +69,7 @@ const ConversationChanellPage  =() => {
         dispatch(addConversation(payload))
     })
 
- 
+    //redux handle author deleting message but this neew to remove message from recipient immmediatly
     socket.on('onDeleteMessage' , (payload:DeleteMessageResponse) => {
       dispatch(deleteMessage(payload))
     } )

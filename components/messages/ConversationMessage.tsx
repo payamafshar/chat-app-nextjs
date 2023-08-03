@@ -99,8 +99,8 @@ const ConversationMessage  =  () => {
                 <div>
 
                 {
-                  isEditingMessage && selectedMessage?.id == message.id && <> <input onChange={(e) => handleChangeSetEditing(e)} className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2" value={messageBeingEdited?.content} />   <span onClick={(e) => handleEditMessageSubmit(e)} className="text-sm text-blackSmooth  font-bold ">Edit </span>
-                  <span onClick={() => dispatch(setIsEditing(false))} className="text-sm text-blackSmooth  font-bold ml-8">Cancel </span></>
+                  isEditingMessage && selectedMessage?.id == message.id && <> <input onChange={(e) => handleChangeSetEditing(e)} className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2" value={messageBeingEdited?.content} />   <span onClick={(e) => handleEditMessageSubmit(e)} className="text-sm text-blackSmooth cursor-pointer font-bold ">Edit </span>
+                  <span onClick={() => dispatch(setIsEditing(false))} className="text-sm text-blackSmooth cursor-pointer font-bold ml-8">Cancel </span></>
                 }
                
               </div>

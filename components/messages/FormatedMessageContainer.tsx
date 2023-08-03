@@ -10,7 +10,7 @@ type FormatedProps= {
 
     user?: User 
     message : MessageType
-    handleEditMessageSubmit:React.FormEventHandler<HTMLFormElement>
+    handleEditMessageSubmit:React.FormEventHandler<HTMLFormElement> 
 }
 
 
@@ -62,10 +62,10 @@ const  FormatedMessage : React.FC<FormatedProps> = ({user,message , handleEditMe
            </div>
            <div   className="text-textInner  px-1 ml-2">
            <div  className="bg-buttonBgDark" onClick={(e) => onContextMenu(e , message)}>  {message.content}</div>
-                <form onSubmit={handleEditMessageSubmit}>
+                <form onSubmit={   handleEditMessageSubmit}>
               <div>
                 {
-                  isEditingMessage && selectedMessage?.id == message.id && <> <input onChange={(e) => handleChangeSetEditing(e)} className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2" value={messageBeingEdited?.content} />   <span onClick={(e) => handleEditMessageSubmit(e) } className="text-sm text-blackSmooth cursor-pointer font-bold ">Edit </span>
+                  isEditingMessage && selectedMessage?.id == message.id && <> <input onChange={(e) => handleChangeSetEditing(e)} className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2" value={messageBeingEdited?.content} />   <button type="submit" onClick={(e) => handleEditMessageSubmit} className="text-sm text-blackSmooth cursor-pointer font-bold ">Edit </button>
                   <span className="text-sm text-blackSmooth cursor-pointer font-bold ml-8">Cancel </span></>
                 }
                

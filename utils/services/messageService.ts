@@ -21,7 +21,7 @@ export function deleteMessageApi(params: DeleteMessageParams) {
   );
 }
 export function patchEditMessageApi(params: EditMessageParams) {
-  return http.patch(
+  return http.patch<MessageType>(
     `messages/${params.messageId}/conversation/${params.conversationId}`,
     { content: params.content }
   );
