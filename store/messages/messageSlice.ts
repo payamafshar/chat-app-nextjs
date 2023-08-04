@@ -54,6 +54,27 @@ export const messagesSlice = createSlice({
 
       conversationMessages.messages.splice(findedMessageIndex, 1);
     },
+    // neeed for editing  message from recipient imeedietlly
+    editMessage: (state, action: PayloadAction<MessageType>) => {
+      const {
+        conversation: { id: conversationId },
+        id: messageId,
+      } = action.payload;
+
+      console.log(action.payload);
+
+      const conversationMessages = state.messages.find(
+        (c) => c.conversationId == conversationId
+      );
+
+      if (!conversationMessages) return;
+
+      const findMessageIndex = conversationMessages.messages.findIndex(
+        (cm) => cm.id == messageId
+      );
+
+      conversationMessages.messages[findMessageIndex] = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -118,6 +139,7 @@ export const messagesSlice = createSlice({
   },
 });
 
-export const { addMessages, deleteMessage } = messagesSlice.actions;
+export const { addMessages, deleteMessage, editMessage } =
+  messagesSlice.actions;
 
 export default messagesSlice.reducer;

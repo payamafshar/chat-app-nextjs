@@ -2,14 +2,14 @@
 import React, {  useContext, useEffect,  useState } from 'react';
 import { useAuth } from "../utils/hooks/useAuth";
 import { useRouter } from "next/router";
-import { Conversation, MessageEventPayload, DeleteMessageResponse } from "../utils/types/types";
+import { Conversation, MessageEventPayload, DeleteMessageResponse, MessageType } from "../utils/types/types";
 import ConversationMessage from "../components/messages/ConversationMessage";
 import CoversationSideBar from "../components/conversation/ConversationSideBar";
 import { SocketContext } from "../utils/context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { createConversationMessageThunk } from "../store/messages/thunkMessages";
-import { addMessages, deleteMessage } from "../store/messages/messageSlice";
+import { addMessages, deleteMessage, editMessage } from "../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../store/conversations/conversationSlice";
 
 
@@ -69,21 +69,28 @@ const ConversationChanellPage  =() => {
         dispatch(addConversation(payload))
     })
 
-    //redux handle author deleting message but this neew to remove message from recipient immmediatly
+    //redux with fullfieldThunk handle author deleting message but this neew to remove message from recipient screen immmediatly
     socket.on('onDeleteMessage' , (payload:DeleteMessageResponse) => {
       dispatch(deleteMessage(payload))
     } )
 
+     //redux with fullfieldThunk handle author deleting message but this neew to remove message from recipient screen immmediatly
+    socket.on('onEditMessage' , (payload : MessageType) => {
+
+        dispatch(editMessage(payload))
+    })
+
 
     return () => {
       socket.emit('onConversationLeave' , {conversationId})
-      socket.off('connected')
       socket.off('onConversationCreate')
       socket.off('onDeleteMessage')
       socket.off('userJoin')
+      socket.off('onMessage')
       socket.off('userLeave')
       socket.off('userStopTyping')
       socket.off('userStartTyping')
+      socket.off('onEditMessage')
     }
 
   },[conversationId])
