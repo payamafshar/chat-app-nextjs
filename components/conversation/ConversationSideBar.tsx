@@ -19,7 +19,7 @@ const CoversationSideBar  = () => {
   const router = useRouter()
   const dispatch  = useDispatch<AppDispatch>()
   const  conversations = useSelector((state :RootState) => state.conversation.conversations)
-  const  selectedType = useSelector((state :RootState) => state.selectedConversationType.type)
+  const  selectedConversationType = useSelector((state :RootState) => state.selectedConversationType.type)
   const groups = useSelector((state:RootState) => state.groups.groups )
   useEffect(()=>{
 
@@ -32,8 +32,9 @@ const CoversationSideBar  = () => {
   const handleConversationType = (type:ConversationType) => {
 
     dispatch(updateType(type))
+    if(type == 'private')
     router.push('/groups')
-
+    else router.push('conversation')
   }
  
 
@@ -55,14 +56,14 @@ const CoversationSideBar  = () => {
 
       <div className="flex justify-evenly mt-6   items-center">
           {
-            chatTypes.map( (item ) =>  <button  key={item.label} onClick={ () =>  handleConversationType(item.type)} className="p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2 hover:bg-blackSmooth   border border-white rounded-lg">{item.label}</button> )
+            chatTypes.map( (item ) =>  <button  key={item.label} onClick={ () =>  handleConversationType(item.type)} className={` ${selectedConversationType == item.type ? "bg-blackSmooth" : "bg-inputBgDark"} p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2   rounded-lg`}>{item.label}</button> )
           }
      </div>
      <div className="  h-full flex-1 flex-col justify-start px-6 ">
        
        {
         
-        selectedType == 'private' ? 
+        selectedConversationType == 'private' ? 
          conversations?.map(conversation => { 
           return <ConversationSideBarItem key={conversation.id} conversation={conversation}/> 
           })
