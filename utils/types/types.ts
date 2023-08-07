@@ -81,3 +81,10 @@ export type DeleteMessageResponse = {
   messageId: number;
   conversationId: number;
 };
+
+export type ConversationType = "group" | "private";
+
+export type ConversationTypeData = {
+  type: ConversationType;
+  label: string;
+};

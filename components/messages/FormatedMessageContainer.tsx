@@ -21,6 +21,9 @@ const  FormatedMessage : React.FC<FormatedProps> = ({user,message , handleEditMe
     const selectedMessage = useSelector((state:RootState) => state.messageContainer.selectedMessage)
     const messageBeingEdited = useSelector((state:RootState) => state.messageContainer.messageBeingEdited)
     const {conversationId} = router.query
+
+
+    
     const onContextMenu = (event:React.MouseEvent<HTMLDivElement, MouseEvent> , message:MessageType) => {
         event.preventDefault()
         dispatch(toggleContextMenu(true))
@@ -35,20 +38,7 @@ const  FormatedMessage : React.FC<FormatedProps> = ({user,message , handleEditMe
 
      }
 
-    //  const handleEditMessageSubmit = (e :React.FormEvent<HTMLFormElement>) => {
 
-    //     e.preventDefault()
-    //     const id = Number(conversationId)
-    //     const param = {
-    //         messageId : selectedMessage?.id!,
-    //         conversationId:id,
-    //         content : messageBeingEdited?.content
-    //       }
-    
-    // //fetching api 
-    //   dispatch(editMessageThunk(param))
-
-    //  }
 
     return (
         <div className=" flex flex-col px-12  justify-end items-center "> 
@@ -61,7 +51,7 @@ const  FormatedMessage : React.FC<FormatedProps> = ({user,message , handleEditMe
              <p className="text-xs font-semibold ml-2 flex-1 whitespace-nowrap text-white">{message.createdAt}</p>
            </div>
            <div   className="text-textInner  px-1 ml-2">
-           <div  className="bg-buttonBgDark" onClick={(e) => onContextMenu(e , message)}>  {message.content}</div>
+           <div  onClick={(e) => onContextMenu(e , message)}>  {message.content}</div>
                 <form onSubmit={   handleEditMessageSubmit}>
               <div>
                 {

@@ -32,18 +32,7 @@ const ConversationMessage  =  () => {
     
       },[ conversationId])
 
-      useEffect(() => {
-        // const handleClick = (event: MouseEvent) => {
-        //     event.preventDefault()
-        //   if (elemRef.current && elemRef.current.contains(event.target as Node)) {
-        //     dispatch(toggleContextMenu(true));
-        //   }
-        // };
-        // document.addEventListener("click", handleClick);
-        // return () => {
-        //   document.removeEventListener("click", handleClick);
-        // };
-      }, []);
+   
 
  
 

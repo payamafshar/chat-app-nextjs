@@ -143,12 +143,18 @@ const ConversationChanellPage  =() => {
     <CoversationSideBar  />
   </div>
 
-  <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
-        <p className="text-textInner  text-lg font-bold">
-          {
-           user?.id == speceficConversation?.creator.username ?  speceficConversation?.recipient.username : speceficConversation?.creator.username 
+  <div className="bg-blackSmooth col-span-9  flex justify-center p-6 items-center h-[75px]  w-full">
+        <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
+        <p className='text-base h-2/4 '>
+         {
+           user?.id == speceficConversation?.creator.id ?  speceficConversation?.recipient.username : speceficConversation?.creator.username 
           }
         </p>
+        {
+        recipientTyping && <div className='text-textInner text-xs h-2/4 p-3'> typing... </div>
+        }
+        </div>
+       
       </div>
        
        

@@ -1,16 +1,12 @@
-import { NextPage } from "next";
-import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import ConversationSideBarItem from "./ConversationSideBarItem";
 import TransitionsModal from "../modal/Modal";
-import { useEffect, useState } from "react";
-import { getConversations } from "../../utils/services/conversationService";
-import { Conversation } from "../../utils/types/types";
+import { useEffect} from "react";
+import { ConversationType } from "../../utils/types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchConversationThunk } from "../../store/conversations/thunkConversation";
 import { AppDispatch, RootState } from "../../store";
-import { useRouter } from "next/router";
-import { updateConversation } from "../../store/conversations/conversationSlice";
-import { toggleContextMenu } from "../../store/messageContainerSlice";
+import { chatTypes } from "../../utils/constants";
+import { updateType } from "../../store/selectedSlice";
 
 
 
@@ -19,11 +15,19 @@ import { toggleContextMenu } from "../../store/messageContainerSlice";
 const CoversationSideBar  = () => {
   const dispatch  = useDispatch<AppDispatch>()
   const  conversations = useSelector((state :RootState) => state.conversation.conversations)
+  const  selectedType = useSelector((state :RootState) => state.selectedConversationType.type)
   useEffect(()=>{
 
     dispatch(fetchConversationThunk())
 
   },[])
+
+
+  const handleConversationType = (type:ConversationType) => {
+
+    dispatch(updateType(type))
+
+  }
  
 
 
@@ -42,16 +46,21 @@ const CoversationSideBar  = () => {
         </span>
      </div>
 
+      <div className="flex justify-evenly mt-6   items-center">
+          {
+            chatTypes.map( (item ) =>  <button  key={item.label} onClick={ () =>  handleConversationType(item.type)} className="p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2 hover:bg-blackSmooth   border border-white rounded-lg">{item.label}</button> )
+          }
+     </div>
      <div className="  h-full flex-1 flex-col justify-start px-6 ">
        
        {
         
-
-        conversations?.map(conversation => { 
+        selectedType == 'private' ? 
+         conversations?.map(conversation => { 
           return <ConversationSideBarItem key={conversation.id} conversation={conversation}/> 
           })
 
-
+          : []
        }
      
     
