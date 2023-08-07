@@ -7,18 +7,24 @@ import { fetchConversationThunk } from "../../store/conversations/thunkConversat
 import { AppDispatch, RootState } from "../../store";
 import { chatTypes } from "../../utils/constants";
 import { updateType } from "../../store/selectedSlice";
+import GroupSideBarItem from "../group/groupSideBarItem";
+import { fetchGroupThunk } from "../../store/groups/thunkGroups";
+import { useRouter } from "next/router";
 
 
 
 
 
 const CoversationSideBar  = () => {
+  const router = useRouter()
   const dispatch  = useDispatch<AppDispatch>()
   const  conversations = useSelector((state :RootState) => state.conversation.conversations)
   const  selectedType = useSelector((state :RootState) => state.selectedConversationType.type)
+  const groups = useSelector((state:RootState) => state.groups.groups )
   useEffect(()=>{
 
     dispatch(fetchConversationThunk())
+    dispatch(fetchGroupThunk())
 
   },[])
 
@@ -26,6 +32,7 @@ const CoversationSideBar  = () => {
   const handleConversationType = (type:ConversationType) => {
 
     dispatch(updateType(type))
+    router.push('/groups')
 
   }
  
@@ -60,7 +67,7 @@ const CoversationSideBar  = () => {
           return <ConversationSideBarItem key={conversation.id} conversation={conversation}/> 
           })
 
-          : []
+          : groups?.map(group => <GroupSideBarItem key={group.id} group={group} />)
        }
      
     

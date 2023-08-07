@@ -88,3 +88,24 @@ export type ConversationTypeData = {
   type: ConversationType;
   label: string;
 };
+export type GroupMessageType = {
+  id: number;
+  content?: string;
+  createdAt: string;
+  author: User;
+  group: Group;
+  // attachments?: MessageAttachment[];
+};
+
+export type Group = {
+  id: number;
+  title?: string;
+  users: User[];
+  creator: User;
+  owner: User;
+  messages: GroupMessageType[];
+  createdAt: number;
+  lastMessageSent: MessageType;
+  lastMessageSentAt: Date;
+  avatar?: string;
+};
