@@ -16,12 +16,12 @@ import {UserIcon} from '@heroicons/react/24/outline'
   
     <div className="bg-blackSmooth col-span-9  flex justify-end p-6 items-center h-[75px]  w-full">
           <div className="text-textInner flex  items-center justify-start h-full text-lg font-bold">
-          <p className='text-base h-2/4 '>
+          <p className='text-base h-4/4 '>
            {
             user?.username
             }
           </p>
-          <div className="h-3/4 ml-4"><UserIcon  className=" h-8 w-8  "/></div>
+          <div className="h-4/4 ml-4"><UserIcon  className=" h-8 w-8  "/></div>
           </div>
          
         </div>

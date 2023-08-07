@@ -15,7 +15,7 @@ const GroupSideBarItem : React.FC<Props> =( {group}) => {
 
     const handleClick = (id:number) => {
 
-        router.push(`/groups/${id}`)
+        router.push(`/group/${id}`)
 
     }
 

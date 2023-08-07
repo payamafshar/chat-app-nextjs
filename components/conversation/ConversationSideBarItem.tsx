@@ -16,7 +16,7 @@ const ConversationSideBarItem : React.FC<Props> =( {conversation}) => {
 
     const handleClick = (id:number) => {
 
-        router.push(`/${id}`)
+        router.push(`/conversation/${id}`)
 
     }
 

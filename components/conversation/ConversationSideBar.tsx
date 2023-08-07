@@ -23,8 +23,10 @@ const CoversationSideBar  = () => {
   const groups = useSelector((state:RootState) => state.groups.groups )
   useEffect(()=>{
 
-    dispatch(fetchConversationThunk())
-    dispatch(fetchGroupThunk())
+   
+  
+      dispatch(fetchConversationThunk())
+      dispatch(fetchGroupThunk())
 
   },[])
 
@@ -33,8 +35,8 @@ const CoversationSideBar  = () => {
 
     dispatch(updateType(type))
     if(type == 'private')
-    router.push('/groups')
-    else router.push('conversation')
+    router.push('/conversation')
+    else router.push('/group')
   }
  
 

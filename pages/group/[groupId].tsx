@@ -11,9 +11,11 @@ import { AppDispatch, RootState } from "../../store";
 import { createConversationMessageThunk } from "../../store/messages/thunkMessages";
 import { addMessages, deleteMessage, editMessage } from "../../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../../store/conversations/conversationSlice";
+import { updateType } from '../../store/selectedSlice';
+import { selectGroupById } from '../../store/groups/groupSlice';
 
 
-const ConversationChanellPage  =() => {
+const GroupChanelPage  =() => {
   const {user , loading} = useAuth()
   const [msg,setMsg] = useState<string>('')
   const [typing,setTyping] = useState(false)
@@ -21,102 +23,22 @@ const ConversationChanellPage  =() => {
   const [recipientTyping , setRecipientTyping] = useState(false)
   const socket = useContext(SocketContext)
   const router = useRouter()
-  const {conversationId} = router.query  
+  const {groupId} = router.query  
   const dispatch = useDispatch <AppDispatch>()
-  const speceficConversation = useSelector((state: RootState) =>
-  selectConversationById(state, Number(conversationId!))
-);
+
+  const speceficGroup = useSelector((state:RootState) => selectGroupById(state,Number(groupId)))
 
 
 
   useEffect(()=>{
 
-    socket.emit('onConversationJoin' ,  {conversationId})
+    dispatch(updateType('group'))
+   
 
-
-    socket.on('userJoin' , () => {
-      console.log('user Joined Conversation')
-    })
-    socket.on('userLeave' , () => {
-      console.log('user Leaved Conversation')
-    })
-
-
-    socket.on('userStartTyping' , () => {
-
-      console.log('user is typeing')
-      setRecipientTyping(true)
-      
-    })
-
-
-    socket.on('userStopTyping' , () => {
-
-      console.log('user is stop typeing')
-      setRecipientTyping(false)
-
-    })
-
-
-    socket.on('onMessage',(payload: MessageEventPayload) => {
-
-      const {conversation } = payload
-      dispatch(addMessages(payload))
-      dispatch(updateConversation(conversation))
-    })
-    // handle recipient create conversation realtime//* creator show conversation handled by redux
-    socket.on('onConversationCreate' , (payload:Conversation) => {
-        dispatch(addConversation(payload))
-    })
-
-    //redux with fullfieldThunk handle author deleting message but this neew to remove message from recipient screen immmediatly
-    socket.on('onDeleteMessage' , (payload:DeleteMessageResponse) => {
-      dispatch(deleteMessage(payload))
-    } )
-
-     //redux with fullfieldThunk handle author deleting message but this neew to remove message from recipient screen immmediatly
-    socket.on('onEditMessage' , (payload : MessageType) => {
-
-        dispatch(editMessage(payload))
-    })
-
-
-    return () => {
-      socket.emit('onConversationLeave' , {conversationId})
-      socket.off('onConversationCreate')
-      socket.off('onDeleteMessage')
-      socket.off('userJoin')
-      socket.off('onMessage')
-      socket.off('userLeave')
-      socket.off('userStopTyping')
-      socket.off('userStartTyping')
-      socket.off('onEditMessage')
-    }
-
-  },[conversationId])
+  },[groupId])
 
   const handleUserTyping = () => {
-    // fireing subscribe message Event On BackEnd and that event sendUser status typing
-    //on another event(userStartTyping, userStopTyping) and we listen that events to get recipient status
-    // on above useEffect beacuse on backEnd rooms emit event for connected user expet himself
-    if(typing) {
-      clearTimeout(timer)
-      setTimer(setTimeout(()=> {
-
-        console.log('user is stop ')
-        socket.emit('onTypingStop' , {conversationId})
-        setTyping(false)
-      },2000))
-
-    }else {
-      setTyping(true)
-      socket.emit('onTypingStart',{conversationId})
-      console.log('user is typing')
-
-    }
-
   
-
 
   }
 
@@ -128,12 +50,7 @@ const ConversationChanellPage  =() => {
 
   const handleSubmitMessage =async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const convNumber = Number(conversationId)
-    const data = {conversationId:convNumber,content:msg}
-
-     dispatch(createConversationMessageThunk(data))
-
-     setMsg('')
+ 
 
   }
 
@@ -146,9 +63,9 @@ const ConversationChanellPage  =() => {
   <div className="bg-blackSmooth col-span-9  flex justify-center p-6 items-center h-[75px]  w-full">
         <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
         <p className='text-base h-2/4 '>
-         {
-           user?.id == speceficConversation?.creator.id ?  speceficConversation?.recipient.username : speceficConversation?.creator.username 
-          }
+        {
+            speceficGroup?.title
+        }
         </p>
         {
         recipientTyping && <div className='text-textInner text-xs h-2/4 p-3'> typing... </div>
@@ -189,4 +106,4 @@ const ConversationChanellPage  =() => {
 }
 
 
-export default ConversationChanellPage
+export default GroupChanelPage

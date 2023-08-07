@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { Group } from "../../utils/types/types";
 import { fetchGroupThunk } from "./thunkGroups";
+import { RootState } from "..";
 
 interface GroupState {
   groups: Group[];
@@ -21,6 +22,12 @@ const groupSlice = createSlice({
     });
   },
 });
+const selectGroups = (state: RootState) => state.groups.groups;
+const selectGroupId = (state: RootState, id: number) => id;
+export const selectGroupById = createSelector(
+  [selectGroups, selectGroupId],
+  (groups, groupId) => groups.find((g) => g.id === groupId)
+);
 
 export const {} = groupSlice.actions;
 
