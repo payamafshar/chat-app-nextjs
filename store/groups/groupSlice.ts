@@ -1,6 +1,6 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { Group } from "../../utils/types/types";
-import { fetchGroupThunk } from "./thunkGroups";
+import { createGroupThunk, fetchGroupThunk } from "./thunkGroups";
 import { RootState } from "..";
 
 interface GroupState {
@@ -19,6 +19,10 @@ const groupSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchGroupThunk.fulfilled, (state, action) => {
       state.groups = action.payload.data;
+    });
+
+    builder.addCase(createGroupThunk.fulfilled, (state, action) => {
+      state.groups.unshift(action.payload.data);
     });
   },
 });

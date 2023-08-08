@@ -26,6 +26,7 @@ const GroupChanelPage  =() => {
   const {groupId} = router.query  
   const dispatch = useDispatch <AppDispatch>()
 
+  // for selecting specefig group with page  params and use Redux Selector
   const speceficGroup = useSelector((state:RootState) => selectGroupById(state,Number(groupId)))
 
 
@@ -33,8 +34,15 @@ const GroupChanelPage  =() => {
   useEffect(()=>{
 
     dispatch(updateType('group'))
-   
 
+    socket.emit('onGroupJoin' , {groupId})
+
+    // socket.on('onGroupCreate' , (payload:))
+   
+    return () => {
+      socket.emit('onGroupLeave' , {groupId})
+      socket.off('onGroupJoin')
+    }
   },[groupId])
 
   const handleUserTyping = () => {
