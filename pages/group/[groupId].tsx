@@ -2,7 +2,7 @@
 import React, {  useContext, useEffect,  useState } from 'react';
 import { useAuth } from "../../utils/hooks/useAuth";
 import { useRouter } from "next/router";
-import { Conversation, MessageEventPayload, DeleteMessageResponse, MessageType } from "../../utils/types/types";
+import { Conversation, MessageEventPayload, DeleteMessageResponse, MessageType, Group } from "../../utils/types/types";
 import ConversationMessage from "../../components/messages/ConversationMessage";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
@@ -12,7 +12,7 @@ import { createConversationMessageThunk } from "../../store/messages/thunkMessag
 import { addMessages, deleteMessage, editMessage } from "../../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../../store/conversations/conversationSlice";
 import { updateType } from '../../store/selectedSlice';
-import { selectGroupById } from '../../store/groups/groupSlice';
+import { addGroup, selectGroupById } from '../../store/groups/groupSlice';
 
 
 const GroupChanelPage  =() => {
@@ -37,7 +37,10 @@ const GroupChanelPage  =() => {
 
     socket.emit('onGroupJoin' , {groupId})
 
-    // socket.on('onGroupCreate' , (payload:))
+    socket.on('onGroupCreate' , (payload:Group) => {
+
+      dispatch(addGroup(payload))
+    })
    
     return () => {
       socket.emit('onGroupLeave' , {groupId})
