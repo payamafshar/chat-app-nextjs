@@ -7,9 +7,11 @@ import { fetchConversationThunk } from "../../store/conversations/thunkConversat
 import { AppDispatch, RootState } from "../../store";
 import { chatTypes } from "../../utils/constants";
 import { updateType } from "../../store/selectedSlice";
-import GroupSideBarItem from "../group/groupSideBarItem";
 import { fetchGroupThunk } from "../../store/groups/thunkGroups";
 import { useRouter } from "next/router";
+import GroupSideBarItem from "../group/GroupSideBarItem";
+import  UserIcon  from "@heroicons/react/24/outline/UserIcon";
+import  QuitIcon  from "@heroicons/react/24/outline/ArrowLeftOnRectangleIcon";
 
 
 
@@ -23,11 +25,9 @@ const CoversationSideBar  = () => {
   const groups = useSelector((state:RootState) => state.groups.groups )
   useEffect(()=>{
 
-   
-  
       dispatch(fetchConversationThunk())
       dispatch(fetchGroupThunk())
-
+      
   },[])
 
 
@@ -42,25 +42,41 @@ const CoversationSideBar  = () => {
 
 
 
-    return <aside className={`bg-inputBgDark w-full h-screen overflow-y-scroll scrollbar ` }>
-
-
-     <div className="flex justify-between  p-6 sticky  bg-blackSmooth  top-0">
-       <div className="flex ">
-
-        <p className="text-lg font-bold text-textInner">Coversations</p>
-       </div>
-        <span className="">
-           
-            <TransitionsModal />
-        </span>
+    return<div className="flex w-full "> 
+    <div className="w-1/5 flex flex-col h-screen justify-between p-6 items-center">
+     <div className="flex flex-col">
+     <div className="w-9 h-9 bg-buttonBgDark rounded-full"></div>
+      <span className=" mt-8">
+           <TransitionsModal />
+       </span>
+      <span className=" mt-8">
+           <UserIcon className="h-7 w-7 text-textInner" />
+       </span>
      </div>
+     <div className="">
+     <QuitIcon className="h-7 w-7 text-textInner" />
+     </div>
+    </div>
+    <aside className={`bg-inputBgDark flex flex-col w-4/5 h-screen overflow-y-scroll scrollbar ` }>
 
-      <div className="flex justify-evenly mt-6   items-center">
+
+  
+    <div className="flex flex-col justify-between  p-6 sticky  bg-blackSmooth  top-0">
+       <div className=" ">
+
+       <input className="placeholder:Search... w-full outline-none bg-inputBgDark p-2 rounded-md"  />
+       </div>
+       <div className="flex justify-evenly mt-6   items-center">
           {
-            chatTypes.map( (item ) =>  <button  key={item.label} onClick={ () =>  handleConversationType(item.type)} className={` ${selectedConversationType == item.type ? "bg-blackSmooth" : "bg-inputBgDark"} p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2   rounded-lg`}>{item.label}</button> )
+            chatTypes.map( (item ) =>  <button  key={item.label} onClick={ () =>  handleConversationType(item.type)} className={` ${selectedConversationType == item.type ? "bg-blackSmooth" : "bg-white"} p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2   rounded-lg`}>{item.label}</button> )
           }
      </div>
+   
+     </div>
+    
+     
+
+     
      <div className="  h-full flex-1 flex-col justify-start px-6 ">
        
        {
@@ -78,6 +94,7 @@ const CoversationSideBar  = () => {
      </div>
 
     </aside>
+    </div>
 }
 
 

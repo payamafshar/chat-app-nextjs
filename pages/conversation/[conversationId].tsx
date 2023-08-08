@@ -139,7 +139,7 @@ const ConversationChanellPage  =() => {
 
     return <div  className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
-  <div className="col-span-3 row-span-6 flex-col ">
+  <div className="col-span-3 grid-cols-4 row-span-6 flex-col ">
     <CoversationSideBar  />
   </div>
 
