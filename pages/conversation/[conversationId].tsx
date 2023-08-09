@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../../store";
 import { createConversationMessageThunk } from "../../store/messages/thunkMessages";
 import { addMessages, deleteMessage, editMessage } from "../../store/messages/messageSlice";
 import { addConversation, selectConversationById, updateConversation } from "../../store/conversations/conversationSlice";
+import { updateType } from '../../store/selectedSlice';
 
 
 const ConversationChanellPage  =() => {
@@ -41,6 +42,13 @@ const ConversationChanellPage  =() => {
       console.log('user Leaved Conversation')
     })
 
+    socket.on('onMessage',(payload: MessageEventPayload) => {
+
+      const {conversation } = payload
+      dispatch(addMessages(payload))
+      dispatch(updateConversation(conversation))
+      console.log('dispatch happpen onMessage')
+    })
 
     socket.on('userStartTyping' , () => {
 
@@ -58,12 +66,7 @@ const ConversationChanellPage  =() => {
     })
 
 
-    socket.on('onMessage',(payload: MessageEventPayload) => {
-
-      const {conversation } = payload
-      dispatch(addMessages(payload))
-      dispatch(updateConversation(conversation))
-    })
+  
     // handle recipient create conversation realtime//* creator show conversation handled by redux
     socket.on('onConversationCreate' , (payload:Conversation) => {
         dispatch(addConversation(payload))

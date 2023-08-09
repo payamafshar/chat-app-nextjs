@@ -30,7 +30,7 @@ export const messagesSlice = createSlice({
 
   reducers: {
     addMessages: (state, action: PayloadAction<MessageEventPayload>) => {
-      console.log(action.payload);
+      console.log("add message happen");
       const { conversation, message } = action.payload;
 
       const findedLocalConversation = state.messages.find(

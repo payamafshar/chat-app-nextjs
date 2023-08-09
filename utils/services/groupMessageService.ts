@@ -9,8 +9,8 @@ export function getAllGroupMessages(groupId: number) {
   return http.get<GroupMessage>(`groupMessage/${groupId}/allGroupMessages`);
 }
 
-// export function postCreateGroupMessage(data: CreateGroupMessageParams) {
-//   return http.post<GroupMessageEventPayload>(
-//     `groupMessage/${data.groupId}/create`
-//   );
-// }
+export function postCreateGroupMessage(data: CreateGroupMessageParams) {
+  return http.post(`groupMessage/${data.groupId}/create`, {
+    content: data.content,
+  });
+}

@@ -125,7 +125,11 @@ export type GroupMessageEventPayload = {
   message: GroupMessageType;
 };
 
+
+
+
 export type CreateGroupMessageParams = {
-  content: string;
-  groupId: number;
-};
+
+  groupId:number
+  content:string
+}

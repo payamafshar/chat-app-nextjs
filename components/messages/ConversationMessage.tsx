@@ -8,13 +8,14 @@ import { AppDispatch, RootState } from "../../store";
 import { editMessageThunk, fetchConversationMessagesThunk } from "../../store/messages/thunkMessages";
 import { toggleContextMenu , setContextMenuLocation, setSelectedMessage, setIsEditing, editMessageContent } from "../../store/messageContainerSlice";
 import ContextMenu from "../contextMenu/ContextMenu";
+import FormatedGroupMessage from "../group/FormatedGroupMessage";
 
 
 const ConversationMessage  =  () => {
 
     const {user} = useAuth()
     const router = useRouter()
-    const {conversationId} = router.query
+    const {conversationId } = router.query
     const elemRef = useRef<HTMLDivElement>(null)
     const dispatch = useDispatch<AppDispatch>()
     const showContextMenu = useSelector((state:RootState) => state.messageContainer.showContextMenu)
@@ -29,6 +30,8 @@ const ConversationMessage  =  () => {
         const id = Number(conversationId)
         
         dispatch(fetchConversationMessagesThunk(id))
+
+
     
       },[ conversationId])
 
@@ -64,10 +67,9 @@ const ConversationMessage  =  () => {
     dispatch(setIsEditing(false))
 
 }
-
-
-  const mapMessage = () => {
-    const msg = messages.find(cm => cm.conversationId == Number(conversationId))
+const mapMessage = () => {
+  const msg = messages.find(cm => cm.conversationId == Number(conversationId))
+ 
 
     return msg?.messages?.map((message,index,arr)=> {
 
@@ -101,7 +103,11 @@ const ConversationMessage  =  () => {
         }
         return <FormatedMessage handleEditMessageSubmit={handleEditMessageSubmit}   message={message} user={user} />
     })
-  }
+    
+    
+}    
+
+ 
 
     return <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">
         {mapMessage()}
@@ -115,3 +121,9 @@ const ConversationMessage  =  () => {
 
 
 export default ConversationMessage
+
+
+
+
+
+

@@ -35,6 +35,8 @@ const groupMessageSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchGroupMessagesThunk.fulfilled, (state, action) => {
       const { groupId } = action.payload.data;
+      console.log("inside groupMessage");
+      console.log(action.payload.data);
 
       const checkExistGroupMessage = state.messages.find(
         (gm) => gm.groupId == groupId

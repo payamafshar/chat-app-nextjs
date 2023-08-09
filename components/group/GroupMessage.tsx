@@ -1,13 +1,8 @@
 import { useRouter } from "next/router";
 import { useAuth } from "../../utils/hooks/useAuth";
-import { MessageType, User } from "../../utils/types/types";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { editMessageThunk, fetchConversationMessagesThunk } from "../../store/messages/thunkMessages";
-import { toggleContextMenu , setContextMenuLocation, setSelectedMessage, setIsEditing, editMessageContent } from "../../store/messageContainerSlice";
-import ContextMenu from "../contextMenu/ContextMenu";
-import FormatedMessage from "../messages/FormatedMessageContainer";
 import { fetchGroupMessagesThunk } from "../../store/groupMessage/thunkGroupMessage";
 import FormatedGroupMessage from "./FormatedGroupMessage";
 
@@ -18,8 +13,8 @@ const GroupMessage  =  () => {
     const router = useRouter()
     const {groupId} = router.query
     const dispatch = useDispatch<AppDispatch>()
-
     const messages = useSelector((state:RootState) => state.groupMessage.messages)
+
   
     useEffect(()=> {
 
@@ -27,13 +22,14 @@ const GroupMessage  =  () => {
         
         dispatch(fetchGroupMessagesThunk(id))
     
-      },[ groupId])
+      },[groupId])
 
-   
+
+  
 
   const mapMessage = () => {
     const msg = messages.find(gm => gm.groupId == Number(groupId))
-
+    console.log(messages)
     return msg?.messages?.map((message,index,arr)=> {
 
         const currentMessage = arr[index]
