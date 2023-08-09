@@ -2,7 +2,7 @@
 import React, {  useContext, useEffect,  useState } from 'react';
 import { useAuth } from "../../utils/hooks/useAuth";
 import { useRouter } from "next/router";
-import { Conversation, MessageEventPayload, DeleteMessageResponse, MessageType, Group } from "../../utils/types/types";
+import { Conversation, MessageEventPayload, DeleteMessageResponse, MessageType, Group, GroupSingleMessageType, GroupMessageEventPayload } from "../../utils/types/types";
 import ConversationMessage from "../../components/messages/ConversationMessage";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
@@ -13,6 +13,8 @@ import { addMessages, deleteMessage, editMessage } from "../../store/messages/me
 import { addConversation, selectConversationById, updateConversation } from "../../store/conversations/conversationSlice";
 import { updateType } from '../../store/selectedSlice';
 import { addGroup, selectGroupById } from '../../store/groups/groupSlice';
+import { addGroupMessage } from '../../store/groupMessage/groupMessageSlice';
+import GroupMessage from '../../components/group/GroupMessage';
 
 
 const GroupChanelPage  =() => {
@@ -41,29 +43,25 @@ const GroupChanelPage  =() => {
 
       dispatch(addGroup(payload))
     })
+
+    socket.on('onGroupMessageCreate' , (payload:GroupMessageEventPayload) => {
+
+      dispatch(addGroupMessage(payload))
+    })
    
     return () => {
       socket.emit('onGroupLeave' , {groupId})
       socket.off('onGroupJoin')
+      socket.off('onGroupCreate')
+      socket.off('onGroupMessageCreate')
     }
-  },[groupId])
+  },[groupId ])
 
   const handleUserTyping = () => {
   
 
   }
 
-  const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-
-    setMsg(event.target.value)
-
-  }
-
-  const handleSubmitMessage =async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
- 
-
-  }
 
     return <div  className="h-screen w-full grid grid-cols-12 grid-rows-full ">
 
@@ -92,16 +90,16 @@ const GroupChanelPage  =() => {
    <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
 
 
-      <ConversationMessage/> 
+      <GroupMessage />
 
    </div>
 
    
 
  <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
-     <form onSubmit={handleSubmitMessage} className=" w-11/12 ">
+     <form  className=" w-11/12 ">
 
-     <input onKeyDown={handleUserTyping} value={msg} onChange={handleInputChange} placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
+     <input onKeyDown={handleUserTyping} value={msg}  placeholder="Write Message ..." className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: " />
      </form>
      {
       recipientTyping && <div> typing... </div>

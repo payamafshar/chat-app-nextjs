@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { MessageType, User } from "../../utils/types/types"
+import { GroupMessageType, MessageType, User } from "../../utils/types/types"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { editMessageContent, setContextMenuLocation, setIsEditing, setSelectedMessage, toggleContextMenu , } from "../../store/messageContainerSlice"
@@ -9,7 +9,7 @@ import { useRouter } from "next/router"
 type FormatedProps= {
 
     user?: User 
-    message : MessageType
+    message : MessageType 
     handleEditMessageSubmit:React.FormEventHandler<HTMLFormElement> 
 }
 

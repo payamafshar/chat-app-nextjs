@@ -1,18 +1,30 @@
 import { UserIcon } from "@heroicons/react/24/outline"
 import { useAuth } from "../../utils/hooks/useAuth"
 import CoversationSideBar from "../../components/conversation/ConversationSideBar"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../store"
 import { updateType } from "../../store/selectedSlice"
+import { addGroup } from "../../store/groups/groupSlice"
+import { Group } from "../../utils/types/types"
+import { SocketContext } from "../../utils/context/SocketContext"
 
 const GroupPage = () => {
 
   const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
+    const socket = useContext(SocketContext)
+    useEffect(() => {
 
     dispatch(updateType('group'))
-  })
+    socket.on('onGroupCreate' , (payload:Group) => {
+
+      dispatch(addGroup(payload))
+    })
+
+    return () => {
+      socket.off('onGroupCreate')
+    }
+  },[])
     const { user } = useAuth()
 
     return  <div  className="h-screen w-full grid grid-cols-12 grid-rows-full ">
