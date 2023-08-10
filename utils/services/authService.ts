@@ -8,3 +8,7 @@ export function postLoginUser(data: LoginUserParams) {
   return http.post("/auth/login", data);
 }
 export const getAuthUser = () => http.get<User>(`/auth/status`);
+
+export function searchUsers(query: string) {
+  return http.get<User[]>(`/users/search?query=${query}`);
+}
