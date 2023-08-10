@@ -13,6 +13,7 @@ import {
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import CheckCircleIcon from "@heroicons/react/24/outline/CheckCircleIcon";
 import XCircleIcon from "@heroicons/react/24/outline/XCircleIcon";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 import { useRouter } from "next/router";
 import { useDebounce } from "../../utils/hooks/useDebounce";
 import { TagsInput } from "react-tag-input-component";
@@ -65,7 +66,8 @@ export default function TransitionsModal() {
           router.push(`/conversation/${conversationId}`);
         })
         .catch((err) => console.log(err));
-    } else {
+    }
+    if (finalSelect.length > 0 && selctedConversationType == "group") {
       const usernameArray = finalSelect.map((user) => user.username);
 
       dispatch(createGroupThunk({ users: usernameArray, title }))
@@ -138,7 +140,7 @@ export default function TransitionsModal() {
           onClick={(e) => handleClick(e)}
           className="flex justify-center items-center w-full h-full "
         >
-          <div className=" bg-blackSmooth w-[500px] min-h-[330px] transition-transform rouneded border-2 rounded opacity-100">
+          <div className=" bg-blackSmooth w-[500px] min-h-[360px] transition-transform rouneded border-2 rounded opacity-100">
             <form
               onSubmit={(e) => onSubmit(e)}
               className="flex flex-col h-full justify-center items-center w-full"
@@ -175,9 +177,9 @@ export default function TransitionsModal() {
                 </label>
 
                 {lock && selctedConversationType == "group" ? (
-                  <div className="w-3/4 h-auto p-3 gap-2 flex bg-inputBgDark rounded-md">
+                  <div className="w-3/4 relative h-auto p-3 gap-2 flex flex-wrap bg-inputBgDark rounded-md">
                     {finalSelect.map((user) => (
-                      <div className="text-textInner border p-1 rounded font-semibold text-xs flex ">
+                      <div className="text-textInner bg-blackSmooth p-1 outline-none rounded font-semibold text-xs flex ">
                         <div> {user.username}</div>
                         <div>
                           <XCircleIcon
@@ -187,6 +189,12 @@ export default function TransitionsModal() {
                         </div>
                       </div>
                     ))}{" "}
+                    <div
+                      onClick={() => setLock(false)}
+                      className="absolute right-4 bottom-2 bg-blackSmooth p-1 rounded font-semibold text-textInner"
+                    >
+                      <PlusCircleIcon className="h-6 w-6 " />
+                    </div>
                   </div>
                 ) : (
                   <input
@@ -234,6 +242,7 @@ export default function TransitionsModal() {
                               <div className="flex gap-x-4">
                                 <div
                                   onClick={() => handleSelectUserFroGroup(user)}
+                                  className="cursor-pointer"
                                 >
                                   {finalSelect.includes(user) ? (
                                     <CheckCircleIcon className="h-6 w-6" />
@@ -245,6 +254,7 @@ export default function TransitionsModal() {
                                   onClick={() =>
                                     handleRemoveUserFromGroup(user)
                                   }
+                                  className="cursor-pointer"
                                 >
                                   <TrashIcon className="w-6 h-6 text-textInner" />
                                 </div>
@@ -259,7 +269,7 @@ export default function TransitionsModal() {
                               setHelp(false);
                               setQuery("");
                             }}
-                            className="p-1 border w-24 rounded-md text-sm  outline-none font-semibold bg-blackSmooth text-textInner "
+                            className="p-1  w-16 rounded-md text-sm cursor-pointer  font-semibold bg-inputBgDark outline-none text-center text-textInner "
                           >
                             cancel
                           </div>
@@ -271,7 +281,7 @@ export default function TransitionsModal() {
                               setLock(true);
                               console.log(finalSelect);
                             }}
-                            className="p-1 border w-24 ml-4 rounded-md text-sm outline-none font-semibold bg-blackSmooth text-textInner "
+                            className="p-1 cursor-pointer w-16 ml-4 rounded-md text-center text-sm  font-semibold outline-none bg-inputBgDark text-textInner "
                           >
                             save
                           </div>
@@ -293,7 +303,7 @@ export default function TransitionsModal() {
                 }}
                 className="w-3/4 p-3 bg-inputBgDark placeholder:Message(Optional) mb-2 rounded-md text-white font-semibold outline-none"
               />
-              <button className="w-3/4 p-3 bg-buttonBgDark mt-3 rounded-md text-textInner font-semibold">
+              <button className="w-3/4 p-3 mb-6 bg-buttonBgDark mt-3 rounded-md text-textInner font-semibold">
                 Create Conversation
               </button>
             </form>
