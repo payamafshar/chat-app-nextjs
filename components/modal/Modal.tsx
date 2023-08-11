@@ -54,6 +54,8 @@ export default function TransitionsModal() {
         .finally(() => setSearching(false));
     }
   }, [debouncedQuery]);
+
+  const inputRef = React.useRef(null);
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selctedConversationType == "private") {
@@ -155,8 +157,9 @@ export default function TransitionsModal() {
                 <input
                   onChange={(e) => handleRadioButton(e)}
                   name="yek"
-                  value={"group"}
+                  value="group"
                   type="radio"
+                  checked={selctedConversationType == "group" ? true : false}
                 />
                 <label className="text-textInner text-sm font-semibold py-1 px-2">
                   Private
@@ -164,8 +167,9 @@ export default function TransitionsModal() {
                 <input
                   onChange={(e) => handleRadioButton(e)}
                   name="yek"
-                  value={"private"}
+                  value="private"
                   type="radio"
+                  checked={selctedConversationType == "private" ? true : false}
                 />
               </div>
               <div className="w-full items-center relative  flex flex-col">
@@ -173,7 +177,9 @@ export default function TransitionsModal() {
                   htmlFor="recipient"
                   className="text-textInner text-sm items-start w-3/4 font-semibold"
                 >
-                  Recipient
+                  {selctedConversationType == "private"
+                    ? "Recipient"
+                    : "Invited Users"}
                 </label>
 
                 {lock && selctedConversationType == "group" ? (
@@ -193,7 +199,7 @@ export default function TransitionsModal() {
                       onClick={() => setLock(false)}
                       className="absolute right-4 bottom-2 bg-blackSmooth p-1 rounded font-semibold text-textInner"
                     >
-                      <PlusCircleIcon className="h-6 w-6 " />
+                      <PlusCircleIcon className="h-6 w-6 cursor-pointer " />
                     </div>
                   </div>
                 ) : (
@@ -211,15 +217,21 @@ export default function TransitionsModal() {
                       <div className="flex  flex-col justify-start py-4 absolute w-full top-[98%] flex-1 overflow-y-scroll h-[200px] items-center">
                         {userResults?.map((user) => (
                           <div
-                            className="bg-blackSmooth w-3/4 p-2  flex-1  opacity-95   "
+                            className="bg-blackSmooth w-3/4 p-2  flex justify-between  opacity-95   "
                             key={user.id}
                           >
                             <div
                               onClick={() => handleSelectUser(user)}
-                              className="flex  p-2 justify-start px-4 items-center text-textInner font-semibold"
+                              className="flex  p-2 justify-start px-4 items-center cursor-pointer text-textInner font-semibold"
                             >
                               {user.username}
                             </div>{" "}
+                            <div
+                              onClick={() => handleSelectUser(user)}
+                              className="text-textInner p-2 font-semibold cursor-pointer"
+                            >
+                              Pick
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -227,7 +239,7 @@ export default function TransitionsModal() {
                   : userResults.length > 0 &&
                     query &&
                     help && (
-                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[98%] flex-1 overflow-y-scroll h-[200px] items-center ">
+                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[98%] flex-1 overflow-y-scroll scrollbar h-[200px] items-center ">
                         {" "}
                         {userResults?.map((user) => (
                           <div
