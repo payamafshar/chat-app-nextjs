@@ -56,7 +56,7 @@ export default function TransitionsModal() {
       console.log(selectedGroupArray);
       searchUsers(debouncedQuery)
         .then(({ data }) => {
-          setUserResults((prev) => [...data]);
+          setUserResults((prev) => data);
         })
         .catch((err) => console.log(err));
     }

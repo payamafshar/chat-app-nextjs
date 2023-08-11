@@ -1,36 +1,42 @@
-import React, { useEffect } from "react"
-import { Conversation } from "../../utils/types/types"
-import { useRouter } from "next/router"
-import Link from "next/link"
+import React, { useEffect } from "react";
+import { Conversation } from "../../utils/types/types";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useAuth } from "../../utils/hooks/useAuth";
 
 type Props = {
+  conversation: Conversation;
+};
 
-    conversation :Conversation
-}
+const ConversationSideBarItem: React.FC<Props> = ({ conversation }) => {
+  const router = useRouter();
+  const { user } = useAuth();
 
-const ConversationSideBarItem : React.FC<Props> =( {conversation}) => {
+  const { id, recipient, lastMessageSent, creator } = conversation;
 
-    const router = useRouter()
-    
-    const { id ,recipient,lastMessageSent} = conversation
+  const recipientConversation = creator.id == user?.id ? recipient : creator;
+  const handleClick = (id: number) => {
+    router.push(`/conversation/${id}`);
+  };
 
-    const handleClick = (id:number) => {
-
-        router.push(`/conversation/${id}`)
-
-    }
-
-    return <>
-     <div onClick={()=> handleClick(id)} className="flex mt-4 cursor-pointer " >
-     <div className="bg-buttonBgDark w-12 h-12 rounded-full"></div>
-    <div className="flex flex-col ml-3 justify-evenly">
-        <span className="font-bold text-sm text-textInner">{recipient.username}</span>
-        <span className="text-xs text-graySmooth">{lastMessageSent?.content}</span>
-    </div>
-    
-    </div>
+  return (
+    <>
+      <div
+        onClick={() => handleClick(id)}
+        className="flex mt-4 cursor-pointer "
+      >
+        <div className="bg-buttonBgDark w-12 h-12 rounded-full"></div>
+        <div className="flex flex-col ml-3 justify-evenly">
+          <span className="font-bold text-sm text-textInner">
+            {recipientConversation.username}
+          </span>
+          <span className="text-xs text-graySmooth">
+            {lastMessageSent?.content}
+          </span>
+        </div>
+      </div>
     </>
-}
+  );
+};
 
-
-export default ConversationSideBarItem
+export default ConversationSideBarItem;
