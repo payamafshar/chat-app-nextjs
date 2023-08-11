@@ -18,8 +18,12 @@ import { useRouter } from "next/router";
 import { useDebounce } from "../../utils/hooks/useDebounce";
 import { TagsInput } from "react-tag-input-component";
 import { searchUsers } from "../../utils/services/authService";
-import { updateType } from "../../store/selectedSlice";
-import { setUncaughtExceptionCaptureCallback } from "process";
+import {
+  addSelect,
+  deleteSelect,
+  resetSelect,
+  updateType,
+} from "../../store/selectedSlice";
 import { createGroupThunk } from "../../store/groups/thunkGroups";
 
 export default function TransitionsModal() {
@@ -33,7 +37,6 @@ export default function TransitionsModal() {
   const [help, setHelp] = React.useState(false);
   const [userResults, setUserResults] = React.useState<User[]>([]);
   const [selectedUser, setSelectedUser] = React.useState<User>();
-  const [finalSelect, setFinalSelect] = React.useState<User[]>([]);
   const debouncedQuery = useDebounce(query, 1000);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,21 +44,24 @@ export default function TransitionsModal() {
   const selctedConversationType = useSelector(
     (state: RootState) => state.selectedConversationType.type
   );
+  const selectedGroupArray = useSelector(
+    (state: RootState) => state.selectedConversationType.finalSelect
+  );
+  const groupUsernameArray = selectedGroupArray.map((user) => user.username);
   const router = useRouter();
 
   React.useEffect(() => {
     if (debouncedQuery) {
       setSearching(true);
+      console.log(selectedGroupArray);
       searchUsers(debouncedQuery)
         .then(({ data }) => {
-          setUserResults(data);
+          setUserResults((prev) => [...data]);
         })
-        .catch((err) => console.log(err))
-        .finally(() => setSearching(false));
+        .catch((err) => console.log(err));
     }
   }, [debouncedQuery]);
 
-  const inputRef = React.useRef(null);
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selctedConversationType == "private") {
@@ -69,8 +75,8 @@ export default function TransitionsModal() {
         })
         .catch((err) => console.log(err));
     }
-    if (finalSelect.length > 0 && selctedConversationType == "group") {
-      const usernameArray = finalSelect.map((user) => user.username);
+    if (selectedGroupArray.length > 0 && selctedConversationType == "group") {
+      const usernameArray = selectedGroupArray.map((user) => user.username);
 
       dispatch(createGroupThunk({ users: usernameArray, title }))
         .then((res: any) => {
@@ -104,27 +110,39 @@ export default function TransitionsModal() {
     setHelp(false);
   };
 
-  const handleRemoveUserFromGroup = (user: User) => {
-    setFinalSelect((prev) => prev.filter((u) => u.id !== user.id));
+  const handleSetTitleOrMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (selctedConversationType == "private") {
+      setMessage(e.target.value);
+      return;
+    }
+    if (selctedConversationType == "group") {
+      setTitle(e.target.value);
+      return;
+    }
+  };
 
-    console.log(finalSelect);
+  const handleRemoveUserFromGroup = (user: User) => {
+    // setFinalSelect((prev) => prev.filter((u) => u.id !== user.id));
+    dispatch(deleteSelect(user));
   };
   React.useEffect(() => {
-    if (finalSelect.length < 1) setLock(false);
+    if (selectedGroupArray.length < 1) setLock(false);
   }, [toggle]);
 
   const handleFinalDelete = (user: User) => {
     setToggle(!toggle);
-    setFinalSelect((prev) => prev.filter((u) => u.id !== user.id));
+    // setFinalSelect((prev) => prev.filter((u) => u.id !== user.id));
+    dispatch(deleteSelect(user));
   };
 
   const handleSelectUserFroGroup = (user: User) => {
-    const selectedUser = userResults.find((u) => u.id == user.id);
-    if (finalSelect.includes(selectedUser!)) return;
-    setFinalSelect((prev) => [...finalSelect, selectedUser!]);
+    // const selectedUser = userResults.find((u) => u.id == user.id);
 
-    console.log(finalSelect);
+    if (selectedGroupArray.includes(user)) return;
+    // setFinalSelect((prev) => [...finalSelect, selectedUser!]);
+    dispatch(addSelect(user));
   };
+
   return (
     <div>
       <PencilSquareIcon
@@ -184,7 +202,7 @@ export default function TransitionsModal() {
 
                 {lock && selctedConversationType == "group" ? (
                   <div className="w-3/4 relative h-auto p-3 gap-2 flex flex-wrap bg-inputBgDark rounded-md">
-                    {finalSelect.map((user) => (
+                    {selectedGroupArray.map((user) => (
                       <div className="text-textInner bg-blackSmooth p-1 outline-none rounded font-semibold text-xs flex ">
                         <div> {user.username}</div>
                         <div>
@@ -196,7 +214,10 @@ export default function TransitionsModal() {
                       </div>
                     ))}{" "}
                     <div
-                      onClick={() => setLock(false)}
+                      onClick={() => {
+                        setLock(false);
+                        setHelp(true);
+                      }}
                       className="absolute right-4 bottom-2 bg-blackSmooth p-1 rounded font-semibold text-textInner"
                     >
                       <PlusCircleIcon className="h-6 w-6 cursor-pointer " />
@@ -253,10 +274,14 @@ export default function TransitionsModal() {
                               </div>{" "}
                               <div className="flex gap-x-4">
                                 <div
-                                  onClick={() => handleSelectUserFroGroup(user)}
+                                  onClick={() => {
+                                    handleSelectUserFroGroup(user);
+                                  }}
                                   className="cursor-pointer"
                                 >
-                                  {finalSelect.includes(user) ? (
+                                  {groupUsernameArray.includes(
+                                    user.username
+                                  ) ? (
                                     <CheckCircleIcon className="h-6 w-6" />
                                   ) : (
                                     "Pick"
@@ -268,7 +293,13 @@ export default function TransitionsModal() {
                                   }
                                   className="cursor-pointer"
                                 >
-                                  <TrashIcon className="w-6 h-6 text-textInner" />
+                                  {groupUsernameArray.includes(
+                                    user.username
+                                  ) ? (
+                                    <TrashIcon className="w-6 h-6 text-textInner" />
+                                  ) : (
+                                    ""
+                                  )}
                                 </div>
                               </div>
                             </div>{" "}
@@ -277,7 +308,7 @@ export default function TransitionsModal() {
                         <div className="flex justify-center items-center mt-0.5">
                           <div
                             onClick={() => {
-                              setFinalSelect([]);
+                              dispatch(resetSelect());
                               setHelp(false);
                               setQuery("");
                             }}
@@ -287,11 +318,8 @@ export default function TransitionsModal() {
                           </div>
                           <div
                             onClick={() => {
-                              setFinalSelect((prev) => prev);
                               setHelp(false);
-                              setQuery("");
                               setLock(true);
-                              console.log(finalSelect);
                             }}
                             className="p-1 cursor-pointer w-16 ml-4 rounded-md text-center text-sm  font-semibold outline-none bg-inputBgDark text-textInner "
                           >
@@ -308,11 +336,7 @@ export default function TransitionsModal() {
                 {selctedConversationType == "private" ? "Message" : "Title"}
               </label>
               <input
-                onChange={(e) => {
-                  selctedConversationType == "private"
-                    ? setMessage(e.target.value)
-                    : setTitle(e.target.value);
-                }}
+                onChange={(e) => handleSetTitleOrMessage(e)}
                 className="w-3/4 p-3 bg-inputBgDark placeholder:Message(Optional) mb-2 rounded-md text-white font-semibold outline-none"
               />
               <button className="w-3/4 p-3 mb-6 bg-buttonBgDark mt-3 rounded-md text-textInner font-semibold">
