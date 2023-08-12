@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MessageType, Points } from "../utils/types/types";
+import {
+  GroupMessage,
+  GroupMessageType,
+  MessageType,
+  Points,
+} from "../utils/types/types";
 
 export interface MessageContainerState {
   selectedMessage?: MessageType;
+  selectedGroupMessage?: GroupMessageType;
   messageBeingEdited?: MessageType;
   isEditingMessage: boolean;
   showContextMenu: boolean;
@@ -21,6 +27,9 @@ export const messageContainerSlice = createSlice({
   reducers: {
     setSelectedMessage: (state, action) => {
       state.selectedMessage = action.payload;
+    },
+    setSelectedGroupMessage: (state, action) => {
+      state.selectedGroupMessage = action.payload;
     },
     setMessageBeingEdited: (state, action) => {
       state.messageBeingEdited = action.payload;
@@ -53,6 +62,7 @@ export const {
   setSelectedMessage,
   editMessageContent,
   // resetMessageContainer,
+  setSelectedGroupMessage,
   toggleContextMenu,
   setContextMenuLocation,
 } = messageContainerSlice.actions;

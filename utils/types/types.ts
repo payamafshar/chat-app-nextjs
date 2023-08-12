@@ -125,11 +125,18 @@ export type GroupMessageEventPayload = {
   message: GroupMessageType;
 };
 
-
-
-
 export type CreateGroupMessageParams = {
+  groupId: number;
+  content: string;
+};
 
-  groupId:number
-  content:string
-}
+export type DeleteGroupMessageParams = {
+  groupId: number;
+  messageId: number;
+};
+
+export type DeleteGroupMessageEventPayload = {
+  userId: number;
+  groupId: number;
+  messageId: number;
+};
