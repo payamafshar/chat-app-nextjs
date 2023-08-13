@@ -28,7 +28,11 @@ import {
   updateConversation,
 } from "../../store/conversations/conversationSlice";
 import { updateType } from "../../store/selectedSlice";
-import { addGroup, selectGroupById } from "../../store/groups/groupSlice";
+import {
+  addGroup,
+  selectGroupById,
+  updateGroup,
+} from "../../store/groups/groupSlice";
 import {
   addGroupMessage,
   deleteGroupMessageReducer,
@@ -66,7 +70,9 @@ const GroupChanelPage = () => {
     });
 
     socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
+      const { group } = payload;
       dispatch(addGroupMessage(payload));
+      dispatch(updateGroup(group));
     });
 
     socket.on(
