@@ -40,7 +40,7 @@ const CoversationSideBar = () => {
   };
 
   return (
-    <div className="flex w-full ">
+    <div className="flex w-full border-r-2 border-r-blackSmooth ">
       <div className="w-1/5 flex flex-col h-screen justify-between p-6 items-center">
         <div className="flex flex-col">
           <div className="w-9 h-9 bg-buttonBgDark rounded-full"></div>

@@ -13,19 +13,19 @@ body {
 }
 @layer utilities {
   .scrollbar::-webkit-scrollbar {
-    width: 13px;
-    height: 13px;
+  display: none;
+    height: 12px;
   }
 
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
-    background: #171717;
+    background: inherit;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
     background: #3f3f46;
     border-radius: 100vh;
-    border: 2px solid #171717;
+    border: 1px solid #171717;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {

@@ -43,26 +43,47 @@ import {
   deleteGroupMessage,
   postCreateGroupMessage,
 } from "../../utils/services/groupMessageService";
+import { fetchGroupThunk } from "../../store/groups/thunkGroups";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
   const [msg, setMsg] = useState<string>("");
-  const [typing, setTyping] = useState(false);
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
   const [recipientTyping, setRecipientTyping] = useState(false);
+
+  const [online, setOnline] = useState({
+    onlineUsers: [],
+    offlineUser: [],
+  });
   const socket = useContext(SocketContext);
   const router = useRouter();
   const { groupId } = router.query;
   const dispatch = useDispatch<AppDispatch>();
-
   // for selecting specefig group with page  params and use Redux Selector
   const speceficGroup = useSelector((state: RootState) =>
     selectGroupById(state, Number(groupId))
   );
+  // useEffect(()=> {
+
+  //   dispatch(fetchGroupThunk)
+  // },[])
 
   useEffect(() => {
     dispatch(updateType("group"));
-
+    socket.emit("getOnlineGroupUsers", { groupId });
+    const interval = setInterval(() => {
+      socket.emit("getOnlineGroupUsers", { groupId });
+    }, 5000);
+    socket.on("onlineGroupUsersReceived", (payload) => {
+      console.log("received onlineGroupUsersReceived event");
+      console.log(payload);
+      setOnline({
+        onlineUsers: payload.onlineUsers,
+        offlineUser: payload.offlineUsers,
+      });
+    });
+    socket.on("onlineGroupUsersReceived", (payload: any) => {
+      console.log(payload);
+    });
     socket.emit("onGroupJoin", { groupId });
 
     socket.on("onGroupCreate", (payload: Group) => {
@@ -87,6 +108,8 @@ const GroupChanelPage = () => {
     });
 
     return () => {
+      clearInterval(interval);
+      socket.off("onlineGroupUsersReceived");
       socket.emit("onGroupLeave", { groupId });
       socket.off("onDeleteGroupMessage");
       socket.off("onGroupJoin");
@@ -124,7 +147,19 @@ const GroupChanelPage = () => {
         <CoversationSideBar />
       </div>
 
-      <div className="bg-blackSmooth col-span-9  flex justify-center p-6 items-center h-[75px]  w-full">
+      <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
+        <div className=" flex justify-start items-start   border-b  mb-4   ">
+          <div className="text-white text-xs flex flex-col justify-center items-center">
+            <p className="text-sm font-bold ">On</p>
+            <p className="text-xs font-bold">{online.onlineUsers.length}</p>
+          </div>
+          <div className="text-white text-xs ml-2 flex flex-col justify-center items-center">
+            <div className="text-white text-xs">
+              <p className="text-sm font-bold">off</p>
+              <p className="text-xs font-bold">{online.offlineUser.length}</p>
+            </div>
+          </div>
+        </div>
         <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
           <p className="text-base h-2/4 ">
             {speceficGroup?.title || `TITLE ${speceficGroup?.id}`}
@@ -141,7 +176,7 @@ const GroupChanelPage = () => {
         </div>
 
         <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
-          <form onSubmit={handleSubmitMessage} className=" w-11/12 ">
+          <form onSubmit={handleSubmitMessage} className=" w-10/12 ">
             <input
               onKeyDown={handleUserTyping}
               onChange={handleInputChange}

@@ -19,6 +19,8 @@ import {
 import { GroupMessageType, MessageType } from "../../utils/types/types";
 import ContextMenu from "../contextMenu/ContextMenu";
 import { updateType } from "../../store/selectedSlice";
+import { selectGroupById } from "../../store/groups/groupSlice";
+import GroupUsers from "./GroupUser";
 
 const GroupMessage = () => {
   const { user } = useAuth();
@@ -29,21 +31,20 @@ const GroupMessage = () => {
     const id = Number(groupId);
 
     dispatch(fetchGroupMessagesThunk(id));
-
     dispatch(updateType("group"));
   }, [groupId]);
+
   const messages = useSelector(
     (state: RootState) => state.groupMessage.messages
   );
   const showContextMenu = useSelector(
     (state: RootState) => state.messageContainer.showContextMenu
   );
+  const speceficGroup = useSelector((state: RootState) =>
+    selectGroupById(state, Number(groupId!))
+  );
   const isEditingMessage = useSelector(
     (state: RootState) => state.messageContainer.isEditingMessage
-  );
-
-  const selectedConversationType = useSelector(
-    (state: RootState) => state.selectedConversationType.type
   );
 
   const selectedGroupMessage = useSelector(
@@ -151,11 +152,18 @@ const GroupMessage = () => {
   };
 
   return (
-    <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">
-      {mapMessage()}
-      {showContextMenu && user?.id == selectedGroupMessage?.author.id && (
-        <ContextMenu />
-      )}
+    <div className="flex flex-row-reverse   ">
+      <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
+        {speceficGroup?.users.map((user) => (
+          <GroupUsers user={user} />
+        ))}
+      </div>
+      <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">
+        {mapMessage()}
+        {showContextMenu && user?.id == selectedGroupMessage?.author.id && (
+          <ContextMenu />
+        )}
+      </div>
     </div>
   );
 };

@@ -55,7 +55,7 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
   return (
     <div className=" flex flex-col px-12  justify-end items-center ">
       <div className="flex justify-center items-center mb-2">
-        <div className="h-10 w-10 rounded-full "></div>
+        <div className="h-10 w-10 rounded-full bg-buttonBgDark "></div>
         <div>
           <div className="flex justify-center  items-center p-1 py-2  ">
             <p
@@ -72,10 +72,7 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
             </p>
           </div>
           <div className="text-textInner  px-1 ml-2">
-            <div
-              className="bg-buttonBgDark"
-              onClick={(e) => onContextMenu(e, message)}
-            >
+            <div onClick={(e) => onContextMenu(e, message)}>
               {message.content}
             </div>
             <form onSubmit={(e) => handleEditMessageSubmit(e)}>
