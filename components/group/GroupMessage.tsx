@@ -16,17 +16,22 @@ import {
   setSelectedMessage,
   toggleContextMenu,
 } from "../../store/messageContainerSlice";
-import { GroupMessageType, MessageType } from "../../utils/types/types";
+import { GroupMessageType, MessageType, User } from "../../utils/types/types";
 import ContextMenu from "../contextMenu/ContextMenu";
 import { updateType } from "../../store/selectedSlice";
 import { selectGroupById } from "../../store/groups/groupSlice";
 import GroupUsers from "./GroupUser";
 
-const GroupMessage = () => {
+type Props = {
+  online: { onlineUsers: User[]; offlineUsers: [User[]] };
+};
+
+const GroupMessage: React.FC<Props> = ({ online }) => {
   const { user } = useAuth();
   const router = useRouter();
   const { groupId } = router.query;
   const dispatch = useDispatch<AppDispatch>();
+  const onlineUsersId = online.onlineUsers.map((u) => u.id);
   useEffect(() => {
     const id = Number(groupId);
 
@@ -69,6 +74,11 @@ const GroupMessage = () => {
     dispatch(setIsEditing(false));
   };
 
+  // const handlePushToConversation = (id) => {
+
+  //   router.push(`conversation/${id}`)
+
+  // }
   const handleEditMessageSubmit = (
     e:
       | React.FormEvent<HTMLFormElement>
@@ -155,7 +165,20 @@ const GroupMessage = () => {
     <div className="flex flex-row-reverse   ">
       <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
         {speceficGroup?.users.map((user) => (
-          <GroupUsers user={user} />
+          <div
+            // onClick={handlePushToConversation}
+            className="flex relative  flex-col mb-4 justify-center items-center w-full "
+          >
+            <div className="bg-buttonBgDark h-10 w-10 rounded-full  "></div>
+            <div className="mb-2 font-bold  text-white  p-1 text-xs">
+              {user.username}
+            </div>
+            <div
+              className={` absolute ${
+                onlineUsersId.includes(user.id) ? "bg-green" : "bg-white"
+              } -button-1 right-1 h-3 w-3 rounded-full `}
+            ></div>
+          </div>
         ))}
       </div>
       <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">

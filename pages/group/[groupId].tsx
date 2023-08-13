@@ -172,7 +172,7 @@ const GroupChanelPage = () => {
 
       <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  scrollbar ">
         <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
-          <GroupMessage />
+          <GroupMessage online={online} />
         </div>
 
         <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">

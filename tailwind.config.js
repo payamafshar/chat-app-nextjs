@@ -18,6 +18,7 @@ module.exports = {
       textInner: "#d4d4d8",
       white: "#9ca3af",
       blackSmooth: "#171717",
+      green: "#16a34a",
     },
   },
   plugins: [],
