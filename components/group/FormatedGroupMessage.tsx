@@ -15,7 +15,7 @@ import ContextMenu from "../contextMenu/ContextMenu";
 type FormatedProps = {
   user?: User;
   message: GroupMessageType;
-  handleEditMessageSubmit: React.FormEventHandler<HTMLFormElement>;
+  handleEditMessageSubmit: React.FormEventHandler<HTMLFormElement> | any;
 };
 
 const FormatedGroupMessage: React.FC<FormatedProps> = ({
@@ -55,7 +55,7 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
   return (
     <div className=" flex flex-col px-12  justify-end items-center ">
       <div className="flex justify-center items-center mb-2">
-        <div className="h-10 w-10 rounded-full bg-buttonBgDark "></div>
+        <div className="h-10 w-10 rounded-full "></div>
         <div>
           <div className="flex justify-center  items-center p-1 py-2  ">
             <p
@@ -72,10 +72,13 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
             </p>
           </div>
           <div className="text-textInner  px-1 ml-2">
-            <div onClick={(e) => onContextMenu(e, message)}>
+            <div
+              className="bg-buttonBgDark"
+              onClick={(e) => onContextMenu(e, message)}
+            >
               {message.content}
             </div>
-            <form>
+            <form onSubmit={(e) => handleEditMessageSubmit(e)}>
               <div>
                 {isEditingMessage && selectedGroupMessage?.id == message.id && (
                   <>
@@ -85,14 +88,16 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
                       className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2"
                       value={messageBeingEdited?.content}
                     />{" "}
-                    <button
-                      type="submit"
-                      onClick={(e) => handleEditMessageSubmit}
+                    <span
+                      onClick={(e) => handleEditMessageSubmit(e)}
                       className="text-sm text-blackSmooth cursor-pointer font-bold "
                     >
                       Edit{" "}
-                    </button>
-                    <span className="text-sm text-blackSmooth cursor-pointer font-bold ml-8">
+                    </span>
+                    <span
+                      onClick={() => dispatch(setIsEditing(false))}
+                      className="text-sm text-blackSmooth cursor-pointer font-bold ml-8"
+                    >
                       Cancel{" "}
                     </span>
                   </>

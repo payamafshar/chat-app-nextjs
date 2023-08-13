@@ -15,7 +15,6 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
     router.push(`/group/${id}`);
   };
 
-  console.log(lastMessageSent);
   return (
     <>
       <div

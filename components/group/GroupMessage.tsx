@@ -109,7 +109,7 @@ const GroupMessage = () => {
                 {" "}
                 {message.content}
               </div>
-              <form onSubmit={handleEditMessageSubmit}>
+              <form onSubmit={(e) => handleEditMessageSubmit(e)}>
                 <div>
                   {isEditingMessage &&
                     selectedGroupMessage?.id == message.id && (
