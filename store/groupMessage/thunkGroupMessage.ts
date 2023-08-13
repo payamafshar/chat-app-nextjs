@@ -2,8 +2,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   deleteGroupMessage,
   getAllGroupMessages,
+  patchEditGroupMessage,
 } from "../../utils/services/groupMessageService";
-import { DeleteGroupMessageParams } from "../../utils/types/types";
+import {
+  DeleteGroupMessageParams,
+  EditGroupMessageParams,
+} from "../../utils/types/types";
 
 export const fetchGroupMessagesThunk = createAsyncThunk(
   "fetch/groupMesasge",
@@ -16,5 +20,11 @@ export const deleteGroupMessageThunk = createAsyncThunk(
   "delete/groupMessage",
   async (data: DeleteGroupMessageParams) => {
     return deleteGroupMessage(data);
+  }
+);
+export const editGroupMessageThunk = createAsyncThunk(
+  "edit/groupMessage",
+  async (data: EditGroupMessageParams) => {
+    return patchEditGroupMessage(data);
   }
 );

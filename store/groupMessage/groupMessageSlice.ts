@@ -3,9 +3,11 @@ import {
   DeleteGroupMessageEventPayload,
   GroupMessage,
   GroupMessageEventPayload,
+  GroupMessageType,
 } from "../../utils/types/types";
 import {
   deleteGroupMessageThunk,
+  editGroupMessageThunk,
   fetchGroupMessagesThunk,
 } from "./thunkGroupMessage";
 
@@ -33,6 +35,24 @@ const groupMessageSlice = createSlice({
       );
 
       findedGroupMessage?.messages.unshift(action.payload.message);
+    },
+
+    updateGroupMessage: (state, action: PayloadAction<GroupMessageType>) => {
+      const {
+        id: messageId,
+        group: { id: groupId },
+      } = action.payload;
+
+      const findedGroupMessageInLocalState = state.messages.find(
+        (gm) => gm.groupId == groupId
+      );
+      if (!findedGroupMessageInLocalState) return;
+
+      const messageIndex = findedGroupMessageInLocalState?.messages.findIndex(
+        (message) => message.id == messageId
+      );
+
+      findedGroupMessageInLocalState.messages[messageIndex] = action.payload;
     },
 
     deleteGroupMessageReducer: (
@@ -91,10 +111,32 @@ const groupMessageSlice = createSlice({
 
       findedGroupMessageInLocalState?.messages.splice(messageIndex, 1);
     });
+
+    builder.addCase(editGroupMessageThunk.fulfilled, (state, action) => {
+      const {
+        id: messageId,
+        group: { id: groupId },
+      } = action.payload.data;
+
+      const findedGroupMessageInLocalState = state.messages.find(
+        (gm) => gm.groupId == groupId
+      );
+      if (!findedGroupMessageInLocalState) return;
+
+      const messageIndex = findedGroupMessageInLocalState?.messages.findIndex(
+        (message) => message.id == messageId
+      );
+
+      findedGroupMessageInLocalState.messages[messageIndex] =
+        action.payload.data;
+    });
   },
 });
 
-export const { addGroupMessage, deleteGroupMessageReducer } =
-  groupMessageSlice.actions;
+export const {
+  addGroupMessage,
+  deleteGroupMessageReducer,
+  updateGroupMessage,
+} = groupMessageSlice.actions;
 
 export default groupMessageSlice.reducer;

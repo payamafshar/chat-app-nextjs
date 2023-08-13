@@ -9,7 +9,7 @@ import {
 export interface MessageContainerState {
   selectedMessage?: MessageType;
   selectedGroupMessage?: GroupMessageType;
-  messageBeingEdited?: MessageType;
+  messageBeingEdited?: MessageType | GroupMessageType;
   isEditingMessage: boolean;
   showContextMenu: boolean;
   points: Points;

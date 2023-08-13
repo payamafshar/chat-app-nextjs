@@ -9,6 +9,7 @@ import {
   Group,
   GroupMessageEventPayload,
   DeleteGroupMessageEventPayload,
+  GroupMessageType,
 } from "../../utils/types/types";
 import ConversationMessage from "../../components/messages/ConversationMessage";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
@@ -31,6 +32,7 @@ import { addGroup, selectGroupById } from "../../store/groups/groupSlice";
 import {
   addGroupMessage,
   deleteGroupMessageReducer,
+  updateGroupMessage,
 } from "../../store/groupMessage/groupMessageSlice";
 import GroupMessage from "../../components/group/GroupMessage";
 import {
@@ -74,12 +76,17 @@ const GroupChanelPage = () => {
       }
     );
 
+    socket.on("onUpdateGroupMessage", (payload: GroupMessageType) => {
+      dispatch(updateGroupMessage(payload));
+    });
+
     return () => {
       socket.emit("onGroupLeave", { groupId });
       socket.off("onDeleteGroupMessage");
       socket.off("onGroupJoin");
       socket.off("onGroupCreate");
       socket.off("onGroupMessageCreate");
+      socket.off("onUpdateGroupMessage");
     };
   }, [groupId]);
 

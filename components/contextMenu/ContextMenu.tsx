@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from "../../store";
 import {
   setIsEditing,
   setMessageBeingEdited,
+  setSelectedGroupMessage,
   toggleContextMenu,
 } from "../../store/messageContainerSlice";
 import {
@@ -60,7 +61,9 @@ const ContextMenu = () => {
   const handleEditMessage = () => {
     dispatch(toggleContextMenu(false));
     dispatch(setIsEditing(true));
-    dispatch(setMessageBeingEdited(selectedMessage));
+    selectedConversationType == "private"
+      ? dispatch(setMessageBeingEdited(selectedMessage))
+      : dispatch(setMessageBeingEdited(selectedGroupMessage));
   };
 
   return (

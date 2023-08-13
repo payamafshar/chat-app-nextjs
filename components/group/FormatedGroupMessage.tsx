@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { GroupMessageType, User } from "../../utils/types/types";
 import { AppDispatch, RootState } from "../../store";
 import {
+  editMessageContent,
   setContextMenuLocation,
+  setIsEditing,
   setSelectedGroupMessage,
   setSelectedMessage,
   toggleContextMenu,
@@ -13,14 +15,26 @@ import ContextMenu from "../contextMenu/ContextMenu";
 type FormatedProps = {
   user?: User;
   message: GroupMessageType;
+  handleEditMessageSubmit: React.FormEventHandler<HTMLFormElement>;
 };
 
-const FormatedGroupMessage: React.FC<FormatedProps> = ({ user, message }) => {
+const FormatedGroupMessage: React.FC<FormatedProps> = ({
+  user,
+  message,
+  handleEditMessageSubmit,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { groupId } = router.query;
-  const showContextMenu = useSelector(
-    (state: RootState) => state.messageContainer.showContextMenu
+
+  const selectedGroupMessage = useSelector(
+    (state: RootState) => state.messageContainer.selectedGroupMessage
+  );
+  const isEditingMessage = useSelector(
+    (state: RootState) => state.messageContainer.isEditingMessage
+  );
+  const messageBeingEdited = useSelector(
+    (state: RootState) => state.messageContainer.messageBeingEdited
   );
 
   const onContextMenu = (
@@ -31,7 +45,11 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({ user, message }) => {
     dispatch(toggleContextMenu(true));
     dispatch(setContextMenuLocation({ x: event.pageX, y: event.pageY }));
     dispatch(setSelectedGroupMessage(message));
-    // dispatch(setIsEditing(false))
+    dispatch(setIsEditing(false));
+  };
+
+  const handleChangeSetEditing = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(editMessageContent(e.target.value));
   };
 
   return (
@@ -59,10 +77,26 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({ user, message }) => {
             </div>
             <form>
               <div>
-                {/* {
-                  isEditingMessage && selectedMessage?.id == message.id && <> <input onChange={(e) => handleChangeSetEditing(e)} className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2" value={messageBeingEdited?.content} />   <button type="submit" onClick={(e) => handleEditMessageSubmit} className="text-sm text-blackSmooth cursor-pointer font-bold ">Edit </button>
-                  <span className="text-sm text-blackSmooth cursor-pointer font-bold ml-8">Cancel </span></>
-                } */}
+                {isEditingMessage && selectedGroupMessage?.id == message.id && (
+                  <>
+                    {" "}
+                    <input
+                      onChange={(e) => handleChangeSetEditing(e)}
+                      className="w-full text-white rounded placeholder:Edit Message... bg-blackSmooth p-2"
+                      value={messageBeingEdited?.content}
+                    />{" "}
+                    <button
+                      type="submit"
+                      onClick={(e) => handleEditMessageSubmit}
+                      className="text-sm text-blackSmooth cursor-pointer font-bold "
+                    >
+                      Edit{" "}
+                    </button>
+                    <span className="text-sm text-blackSmooth cursor-pointer font-bold ml-8">
+                      Cancel{" "}
+                    </span>
+                  </>
+                )}
               </div>
             </form>
           </div>

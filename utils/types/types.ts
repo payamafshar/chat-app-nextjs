@@ -140,3 +140,9 @@ export type DeleteGroupMessageEventPayload = {
   groupId: number;
   messageId: number;
 };
+
+export type EditGroupMessageParams = {
+  groupId: number;
+  messageId: number;
+  content?: string;
+};
