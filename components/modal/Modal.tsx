@@ -235,7 +235,7 @@ export default function TransitionsModal() {
                   ? userResults.length > 0 &&
                     query &&
                     help && (
-                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[98%] flex-1 overflow-y-scroll h-[200px] items-center">
+                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[89%] flex-1 overflow-y-scroll h-[200px] items-center">
                         {userResults?.map((user) => (
                           <div
                             className="bg-blackSmooth w-3/4 p-2  flex justify-between  opacity-95   "
@@ -260,7 +260,7 @@ export default function TransitionsModal() {
                   : userResults.length > 0 &&
                     query &&
                     help && (
-                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[98%] flex-1 overflow-y-scroll scrollbar h-[200px] items-center ">
+                      <div className="flex  flex-col justify-start py-4 absolute w-full top-[89%] flex-1 overflow-y-scroll scrollbar h-[200px] items-center ">
                         {" "}
                         {userResults?.map((user) => (
                           <div
@@ -331,7 +331,7 @@ export default function TransitionsModal() {
               </div>
               <label
                 htmlFor="message"
-                className="text-textInner text-sm w-3/4 font-semibold"
+                className="text-textInner text-sm w-3/4 font-semibold mt-2"
               >
                 {selctedConversationType == "private" ? "Message" : "Title"}
               </label>

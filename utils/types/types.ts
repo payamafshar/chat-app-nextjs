@@ -151,3 +151,13 @@ export type onlineGroupUsersPayload = {
   onlineUsers: User[];
   offlineUsers: User[];
 };
+
+export type AddUserToGroupParams = {
+  groupId: number;
+  username: string;
+};
+
+export type AddUserToGroupResponse = {
+  recipientId: number;
+  group: Group;
+};

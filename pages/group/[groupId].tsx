@@ -8,6 +8,7 @@ import {
   GroupMessageType,
   User,
   onlineGroupUsersPayload,
+  AddUserToGroupResponse,
 } from "../../utils/types/types";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
@@ -20,6 +21,7 @@ import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 import { updateType } from "../../store/selectedSlice";
 import {
   addGroup,
+  addUserToGroup,
   selectGroupById,
   updateGroup,
 } from "../../store/groups/groupSlice";
@@ -30,6 +32,7 @@ import {
 } from "../../store/groupMessage/groupMessageSlice";
 import GroupMessage from "../../components/group/GroupMessage";
 import { postCreateGroupMessage } from "../../utils/services/groupMessageService";
+import GroupModal from "../../components/modal/GroupAddModal";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
@@ -67,6 +70,10 @@ const GroupChanelPage = () => {
 
     socket.on("onGroupCreate", (payload: Group) => {
       dispatch(addGroup(payload));
+    });
+
+    socket.on("onUserAddedGroup", (payload: AddUserToGroupResponse) => {
+      dispatch(addUserToGroup(payload));
     });
 
     socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
@@ -129,7 +136,7 @@ const GroupChanelPage = () => {
       <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
         <div className=" flex justify-between items-center   border-b  mb-4   ">
           <div className="mr-14 ">
-            <UserPlus className="text-textInner w-7 h-7" />
+            <GroupModal />
           </div>
           <div className="">
             <UserGroupIcon className="text-textInner w-8 h-8 " />
@@ -154,7 +161,7 @@ const GroupChanelPage = () => {
         <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
           <form
             onSubmit={handleSubmitMessage}
-            className=" w-10/12 flex justify-between items-center h-[55px]  bg-inputBgDark outline-none   rounded-md px-8 "
+            className=" w-11/12 flex justify-between items-center h-[55px]  bg-inputBgDark outline-none   rounded-md px-7 "
           >
             <PlusCircleIcon className="h-7 w-7 text-textInner" />
             <input

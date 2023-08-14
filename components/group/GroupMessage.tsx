@@ -16,11 +16,10 @@ import {
   setSelectedMessage,
   toggleContextMenu,
 } from "../../store/messageContainerSlice";
-import { GroupMessageType, MessageType, User } from "../../utils/types/types";
+import { GroupMessageType, User } from "../../utils/types/types";
 import ContextMenu from "../contextMenu/ContextMenu";
 import { updateType } from "../../store/selectedSlice";
 import { selectGroupById } from "../../store/groups/groupSlice";
-import GroupUsers from "./GroupUser";
 
 type Props = {
   online: User[];

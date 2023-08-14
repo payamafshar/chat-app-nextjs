@@ -1,7 +1,12 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { Group } from "../../utils/types/types";
-import { createGroupThunk, fetchGroupThunk } from "./thunkGroups";
+import { AddUserToGroupResponse, Group } from "../../utils/types/types";
+import {
+  addUserToGroupThunk,
+  createGroupThunk,
+  fetchGroupThunk,
+} from "./thunkGroups";
 import { RootState } from "..";
+import { group } from "console";
 
 interface GroupState {
   groups: Group[];
@@ -30,10 +35,31 @@ const groupSlice = createSlice({
       state.groups.splice(findedConversationIndex, 1);
       state.groups.unshift(group);
     },
+
+    addUserToGroup: (state, action: PayloadAction<AddUserToGroupResponse>) => {
+      const {
+        recipientId,
+        group: { id: groupId, users: addedUsersArray },
+      } = action.payload;
+
+      const findedGroup = state.groups.find((g) => g.id == groupId);
+      if (!findedGroup) return;
+      findedGroup.users = addedUsersArray;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGroupThunk.fulfilled, (state, action) => {
       state.groups = action.payload.data;
+    });
+    builder.addCase(addUserToGroupThunk.fulfilled, (state, action) => {
+      const {
+        recipientId,
+        group: { id: groupId, users: addedUsersArray },
+      } = action.payload.data;
+
+      const findedGroup = state.groups.find((g) => g.id == groupId);
+      if (!findedGroup) return;
+      findedGroup.users = addedUsersArray;
     });
   },
 });
@@ -44,6 +70,6 @@ export const selectGroupById = createSelector(
   (groups, groupId) => groups.find((g) => g.id === groupId)
 );
 
-export const { addGroup, updateGroup } = groupSlice.actions;
+export const { addGroup, updateGroup, addUserToGroup } = groupSlice.actions;
 
 export default groupSlice.reducer;
