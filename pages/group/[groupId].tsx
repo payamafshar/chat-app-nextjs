@@ -1,32 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useAuth } from "../../utils/hooks/useAuth";
 import { useRouter } from "next/router";
 import {
-  Conversation,
-  MessageEventPayload,
-  DeleteMessageResponse,
-  MessageType,
   Group,
   GroupMessageEventPayload,
   DeleteGroupMessageEventPayload,
   GroupMessageType,
+  User,
+  onlineGroupUsersPayload,
 } from "../../utils/types/types";
-import ConversationMessage from "../../components/messages/ConversationMessage";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { createConversationMessageThunk } from "../../store/messages/thunkMessages";
-import {
-  addMessages,
-  deleteMessage,
-  editMessage,
-} from "../../store/messages/messageSlice";
-import {
-  addConversation,
-  selectConversationById,
-  updateConversation,
-} from "../../store/conversations/conversationSlice";
+import UserGroupIcon from "@heroicons/react/24/outline/UserGroupIcon";
+import UserPlus from "@heroicons/react/24/outline/UserPlusIcon";
+import FaceSmileIcon from "@heroicons/react/24/outline/FaceSmileIcon";
+import PlusCircleIcon from "@heroicons/react/24/outline/PlusCircleIcon";
 import { updateType } from "../../store/selectedSlice";
 import {
   addGroup,
@@ -39,21 +29,13 @@ import {
   updateGroupMessage,
 } from "../../store/groupMessage/groupMessageSlice";
 import GroupMessage from "../../components/group/GroupMessage";
-import {
-  deleteGroupMessage,
-  postCreateGroupMessage,
-} from "../../utils/services/groupMessageService";
-import { fetchGroupThunk } from "../../store/groups/thunkGroups";
+import { postCreateGroupMessage } from "../../utils/services/groupMessageService";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
   const [msg, setMsg] = useState<string>("");
   const [recipientTyping, setRecipientTyping] = useState(false);
-
-  const [online, setOnline] = useState({
-    onlineUsers: [],
-    offlineUser: [],
-  });
+  const [online, setOnline] = useState<User[]>([]);
   const socket = useContext(SocketContext);
   const router = useRouter();
   const { groupId } = router.query;
@@ -73,17 +55,14 @@ const GroupChanelPage = () => {
     const interval = setInterval(() => {
       socket.emit("getOnlineGroupUsers", { groupId });
     }, 5000);
-    socket.on("onlineGroupUsersReceived", (payload) => {
-      console.log("received onlineGroupUsersReceived event");
-      console.log(payload);
-      setOnline({
-        onlineUsers: payload.onlineUsers,
-        offlineUser: payload.offlineUsers,
-      });
-    });
-    socket.on("onlineGroupUsersReceived", (payload: any) => {
-      console.log(payload);
-    });
+    socket.on(
+      "onlineGroupUsersReceived",
+      (payload: onlineGroupUsersPayload) => {
+        console.log("received onlineGroupUsersReceived event");
+        console.log(payload);
+        setOnline(payload.onlineUsers);
+      }
+    );
     socket.emit("onGroupJoin", { groupId });
 
     socket.on("onGroupCreate", (payload: Group) => {
@@ -148,18 +127,15 @@ const GroupChanelPage = () => {
       </div>
 
       <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
-        <div className=" flex justify-start items-start   border-b  mb-4   ">
-          <div className="text-white text-xs flex flex-col justify-center items-center">
-            <p className="text-sm font-bold ">On</p>
-            <p className="text-xs font-bold">{online.onlineUsers.length}</p>
+        <div className=" flex justify-between items-center   border-b  mb-4   ">
+          <div className="mr-14 ">
+            <UserPlus className="text-textInner w-7 h-7" />
           </div>
-          <div className="text-white text-xs ml-2 flex flex-col justify-center items-center">
-            <div className="text-white text-xs">
-              <p className="text-sm font-bold">off</p>
-              <p className="text-xs font-bold">{online.offlineUser.length}</p>
-            </div>
+          <div className="">
+            <UserGroupIcon className="text-textInner w-8 h-8 " />
           </div>
         </div>
+
         <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
           <p className="text-base h-2/4 ">
             {speceficGroup?.title || `TITLE ${speceficGroup?.id}`}
@@ -176,14 +152,19 @@ const GroupChanelPage = () => {
         </div>
 
         <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
-          <form onSubmit={handleSubmitMessage} className=" w-10/12 ">
+          <form
+            onSubmit={handleSubmitMessage}
+            className=" w-10/12 flex justify-between items-center h-[55px]  bg-inputBgDark outline-none   rounded-md px-8 "
+          >
+            <PlusCircleIcon className="h-7 w-7 text-textInner" />
             <input
               onKeyDown={handleUserTyping}
               onChange={handleInputChange}
               value={msg}
               placeholder="Write Message ..."
-              className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: "
+              className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md   rounded-md placeholder: "
             />
+            <FaceSmileIcon className="h-7 w-7 text-textInner" />
           </form>
           {recipientTyping && <div> typing... </div>}
         </div>

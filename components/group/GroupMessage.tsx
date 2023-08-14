@@ -23,7 +23,7 @@ import { selectGroupById } from "../../store/groups/groupSlice";
 import GroupUsers from "./GroupUser";
 
 type Props = {
-  online: { onlineUsers: User[]; offlineUsers: [User[]] };
+  online: User[];
 };
 
 const GroupMessage: React.FC<Props> = ({ online }) => {
@@ -31,7 +31,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
   const router = useRouter();
   const { groupId } = router.query;
   const dispatch = useDispatch<AppDispatch>();
-  const onlineUsersId = online.onlineUsers.map((u) => u.id);
+  const onlineUsersId = online.map((u) => u.id);
   useEffect(() => {
     const id = Number(groupId);
 

@@ -146,3 +146,8 @@ export type EditGroupMessageParams = {
   messageId: number;
   content?: string;
 };
+
+export type onlineGroupUsersPayload = {
+  onlineUsers: User[];
+  offlineUsers: User[];
+};
