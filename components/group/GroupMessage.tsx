@@ -20,6 +20,12 @@ import { GroupMessageType, User } from "../../utils/types/types";
 import ContextMenu from "../contextMenu/ContextMenu";
 import { updateType } from "../../store/selectedSlice";
 import { selectGroupById } from "../../store/groups/groupSlice";
+import GroupSideBarContextMenu from "../contextMenu/GroupSideBarContextMenu";
+import {
+  setSelectedUser,
+  setUserContextMenuLocation,
+  toggleUserContextMenu,
+} from "../../store/groupParticipentContainerSlice";
 
 type Props = {
   online: User[];
@@ -47,6 +53,10 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
   const speceficGroup = useSelector((state: RootState) =>
     selectGroupById(state, Number(groupId!))
   );
+
+  const showUserContextMenu = useSelector(
+    (state: RootState) => state.groupParticipent.showUserContextMenu
+  );
   const isEditingMessage = useSelector(
     (state: RootState) => state.messageContainer.isEditingMessage
   );
@@ -73,11 +83,14 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
     dispatch(setIsEditing(false));
   };
 
-  // const handlePushToConversation = (id) => {
-
-  //   router.push(`conversation/${id}`)
-
-  // }
+  const handleUserSideBarClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    user: User
+  ) => {
+    dispatch(toggleUserContextMenu(true));
+    dispatch(setUserContextMenuLocation({ x: e.pageX, y: e.pageY }));
+    dispatch(setSelectedUser(user));
+  };
   const handleEditMessageSubmit = (
     e:
       | React.FormEvent<HTMLFormElement>
@@ -165,7 +178,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
       <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
         {speceficGroup?.users.map((user) => (
           <div
-            // onClick={handlePushToConversation}
+            onClick={(e) => handleUserSideBarClick(e, user)}
             className="flex relative  flex-col mb-4 justify-center items-center w-full "
           >
             <div className="bg-buttonBgDark h-10 w-10 rounded-full  "></div>
@@ -185,6 +198,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
         {showContextMenu && user?.id == selectedGroupMessage?.author.id && (
           <ContextMenu />
         )}
+        <div>{showUserContextMenu && <GroupSideBarContextMenu />}</div>
       </div>
     </div>
   );

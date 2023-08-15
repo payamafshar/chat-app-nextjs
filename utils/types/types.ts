@@ -161,3 +161,12 @@ export type AddUserToGroupResponse = {
   recipientId: number;
   group: Group;
 };
+export type DeleteUserFromGroupResponse = {
+  recipientId: number;
+  group: Group;
+};
+
+export type DeleteUserFromGroupParams = {
+  recipientId: number;
+  groupId: number;
+};

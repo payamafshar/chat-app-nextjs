@@ -9,6 +9,7 @@ import {
   User,
   onlineGroupUsersPayload,
   AddUserToGroupResponse,
+  DeleteUserFromGroupResponse,
 } from "../../utils/types/types";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
@@ -22,6 +23,7 @@ import { updateType } from "../../store/selectedSlice";
 import {
   addGroup,
   addUserToGroup,
+  deleteUserFromGroupReducer,
   selectGroupById,
   updateGroup,
 } from "../../store/groups/groupSlice";
@@ -33,6 +35,7 @@ import {
 import GroupMessage from "../../components/group/GroupMessage";
 import { postCreateGroupMessage } from "../../utils/services/groupMessageService";
 import GroupModal from "../../components/modal/GroupAddModal";
+import GroupSideBarContextMenu from "../../components/contextMenu/GroupSideBarContextMenu";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
@@ -46,6 +49,10 @@ const GroupChanelPage = () => {
   // for selecting specefig group with page  params and use Redux Selector
   const speceficGroup = useSelector((state: RootState) =>
     selectGroupById(state, Number(groupId))
+  );
+
+  const showUserContextMenu = useSelector(
+    (state: RootState) => state.groupParticipent.showUserContextMenu
   );
   // useEffect(()=> {
 
@@ -89,6 +96,13 @@ const GroupChanelPage = () => {
       }
     );
 
+    socket.on(
+      "onUserDeletetFromGroup",
+      (payload: DeleteUserFromGroupResponse) => {
+        dispatch(deleteUserFromGroupReducer(payload));
+      }
+    );
+
     socket.on("onUpdateGroupMessage", (payload: GroupMessageType) => {
       dispatch(updateGroupMessage(payload));
     });
@@ -102,6 +116,8 @@ const GroupChanelPage = () => {
       socket.off("onGroupCreate");
       socket.off("onGroupMessageCreate");
       socket.off("onUpdateGroupMessage");
+      socket.off("onUserDeletetFromGroup");
+      socket.off("onUserAddedGroup");
     };
   }, [groupId]);
 
@@ -176,7 +192,6 @@ const GroupChanelPage = () => {
           {recipientTyping && <div> typing... </div>}
         </div>
       </div>
-      <div></div>
     </div>
   );
 };

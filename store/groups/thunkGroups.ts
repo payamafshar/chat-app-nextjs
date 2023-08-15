@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  deleteUserFromGroup,
   getGroups,
   postAddUserToGroup,
   postcreateGroup,
@@ -7,6 +8,7 @@ import {
 import {
   AddUserToGroupParams,
   CreateGroupParams,
+  DeleteUserFromGroupParams,
 } from "../../utils/types/types";
 
 export const fetchGroupThunk = createAsyncThunk("fetch/groups", async () => {
@@ -24,5 +26,12 @@ export const addUserToGroupThunk = createAsyncThunk(
   "addUser/group",
   async (data: AddUserToGroupParams) => {
     return postAddUserToGroup(data);
+  }
+);
+
+export const deleteUserFromGroupThunk = createAsyncThunk(
+  "deleteUser/group",
+  async (data: DeleteUserFromGroupParams) => {
+    return deleteUserFromGroup(data);
   }
 );

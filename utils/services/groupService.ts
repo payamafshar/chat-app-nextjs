@@ -2,6 +2,8 @@ import {
   AddUserToGroupParams,
   AddUserToGroupResponse,
   CreateGroupParams,
+  DeleteUserFromGroupParams,
+  DeleteUserFromGroupResponse,
   Group,
 } from "../types/types";
 import http from "./httpService";
@@ -20,5 +22,10 @@ export function postAddUserToGroup(data: AddUserToGroupParams) {
     {
       username: data.username,
     }
+  );
+}
+export function deleteUserFromGroup(data: DeleteUserFromGroupParams) {
+  return http.delete<DeleteUserFromGroupResponse>(
+    `groups/${data.groupId}/deleteRecipient/${data.recipientId}`
   );
 }

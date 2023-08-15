@@ -1,8 +1,13 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import { AddUserToGroupResponse, Group } from "../../utils/types/types";
+import {
+  AddUserToGroupResponse,
+  DeleteUserFromGroupResponse,
+  Group,
+} from "../../utils/types/types";
 import {
   addUserToGroupThunk,
   createGroupThunk,
+  deleteUserFromGroupThunk,
   fetchGroupThunk,
 } from "./thunkGroups";
 import { RootState } from "..";
@@ -46,6 +51,22 @@ const groupSlice = createSlice({
       if (!findedGroup) return;
       findedGroup.users = addedUsersArray;
     },
+    deleteUserFromGroupReducer: (
+      state,
+      action: PayloadAction<DeleteUserFromGroupResponse>
+    ) => {
+      const {
+        recipientId,
+        group: { id: groupId },
+      } = action.payload;
+      const findedGroup = state.groups.find((g) => g.id == groupId);
+      if (!findedGroup) return;
+      const findUserIndex = findedGroup.users.findIndex(
+        (u) => u.id == recipientId
+      );
+
+      findedGroup.users.splice(findUserIndex, 1);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGroupThunk.fulfilled, (state, action) => {
@@ -61,6 +82,21 @@ const groupSlice = createSlice({
       if (!findedGroup) return;
       findedGroup.users = addedUsersArray;
     });
+    builder.addCase(deleteUserFromGroupThunk.fulfilled, (state, action) => {
+      const {
+        recipientId,
+        group: { id: groupId },
+      } = action.payload.data;
+      console.log("inside delete reducer");
+
+      const findedGroup = state.groups.find((g) => g.id == groupId);
+      if (!findedGroup) return;
+      const findUserIndex = findedGroup.users.findIndex(
+        (u) => u.id == recipientId
+      );
+
+      findedGroup.users.splice(findUserIndex, 1);
+    });
   },
 });
 const selectGroups = (state: RootState) => state.groups.groups;
@@ -70,6 +106,11 @@ export const selectGroupById = createSelector(
   (groups, groupId) => groups.find((g) => g.id === groupId)
 );
 
-export const { addGroup, updateGroup, addUserToGroup } = groupSlice.actions;
+export const {
+  addGroup,
+  updateGroup,
+  addUserToGroup,
+  deleteUserFromGroupReducer,
+} = groupSlice.actions;
 
 export default groupSlice.reducer;
