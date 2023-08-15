@@ -44,6 +44,11 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
     dispatch(updateType("group"));
   }, [groupId]);
 
+  // useEffect(() => {
+  //   const handleClick = () => dispatch(toggleUserContextMenu(false));
+  //   window.addEventListener("dblclick", handleClick);
+  //   return () => window.removeEventListener("dblclick", handleClick);
+  // }, []);
   const messages = useSelector(
     (state: RootState) => state.groupMessage.messages
   );
@@ -183,7 +188,9 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
           >
             <div className="bg-buttonBgDark h-10 w-10 rounded-full  "></div>
             <div className="mb-2 font-bold  text-white  p-1 text-xs">
-              {user.username}
+              {user.username.length >= 5
+                ? user.username.substring(0, 5) + "..."
+                : user.username}
             </div>
             <div
               className={` absolute ${

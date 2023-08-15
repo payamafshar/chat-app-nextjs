@@ -24,10 +24,14 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
         <div className="bg-textInner w-12 h-12 rounded-full"></div>
         <div className="flex flex-col ml-3 justify-evenly">
           <span className="font-bold text-sm text-textInner">
-            {title || "Group"}
+            {title && title?.length > 5
+              ? title.substring(0, 6) + "..."
+              : title || "GROUP"}
           </span>
           <span className="text-xs text-blackSmooth">
-            {lastMessageSent?.content}
+            {lastMessageSent?.content && lastMessageSent?.content?.length > 12
+              ? lastMessageSent?.content?.substring(0, 11) + "..."
+              : lastMessageSent?.content}
           </span>
         </div>
       </div>

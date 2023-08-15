@@ -17,9 +17,10 @@ const GroupSideBarContextMenu = () => {
 
   const handleDeleteUserFromGroup = () => {
     const { groupId } = router.query;
+    const grouId = Number(groupId);
     const data = {
       recipientId: selctedUser?.id!,
-      groupId,
+      groupId: grouId,
     };
     dispatch(deleteUserFromGroupThunk(data)).then((res) =>
       dispatch(toggleUserContextMenu(false))

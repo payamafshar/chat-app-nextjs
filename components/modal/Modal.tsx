@@ -25,6 +25,8 @@ import {
   updateType,
 } from "../../store/selectedSlice";
 import { createGroupThunk } from "../../store/groups/thunkGroups";
+import { selectGroupById } from "../../store/groups/groupSlice";
+import { useAuth } from "../../utils/hooks/useAuth";
 
 export default function TransitionsModal() {
   const [open, setOpen] = React.useState(false);
@@ -41,14 +43,19 @@ export default function TransitionsModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { groupId } = router.query;
+  const { user } = useAuth();
   const selctedConversationType = useSelector(
     (state: RootState) => state.selectedConversationType.type
   );
   const selectedGroupArray = useSelector(
     (state: RootState) => state.selectedConversationType.finalSelect
   );
+  const speceficGroup = useSelector((state: RootState) =>
+    selectGroupById(state, Number(groupId))
+  );
   const groupUsernameArray = selectedGroupArray.map((user) => user.username);
-  const router = useRouter();
 
   React.useEffect(() => {
     if (debouncedQuery) {
@@ -145,10 +152,12 @@ export default function TransitionsModal() {
 
   return (
     <div>
-      <PencilSquareIcon
-        onClick={handleOpen}
-        className="h-7 w-7 text-textInner cursor-pointer font-bold text-lg"
-      />
+      {speceficGroup?.creator.id == user?.id && (
+        <PencilSquareIcon
+          onClick={handleOpen}
+          className="h-7 w-7 text-textInner cursor-pointer font-bold text-lg"
+        />
+      )}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
