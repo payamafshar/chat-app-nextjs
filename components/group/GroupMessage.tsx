@@ -26,6 +26,7 @@ import {
   setUserContextMenuLocation,
   toggleUserContextMenu,
 } from "../../store/groupParticipentContainerSlice";
+import { createConversationThunk } from "../../store/conversations/thunkConversation";
 
 type Props = {
   online: User[];
@@ -76,6 +77,14 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
   const handleChangeSetEditing = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(editMessageContent(e.target.value));
   };
+  // const handleCreateConversationWithUser = (user: User) => {
+  //   dispatch(createConversationThunk({ username: user.username }))
+  //     .then((res) => {
+  //       const conversationId: number = res?.payload.data.id;
+  //       router.push(`/conversation/${conversationId}`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const onContextMenu = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -179,11 +188,12 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
   };
 
   return (
-    <div className="flex flex-row-reverse   ">
+    <div className="flex flex-row-reverse  h-full ">
       <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
         {speceficGroup?.users.map((user) => (
           <div
             onContextMenu={(e) => handleUserSideBarClick(e, user)}
+            // onClick={() => handleCreateConversationWithUser(user)}
             className="flex relative  flex-col cursor-pointer mb-4 justify-center items-center w-full "
           >
             <div className="bg-buttonBgDark h-10 w-10 rounded-full  "></div>
@@ -200,7 +210,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
           </div>
         ))}
       </div>
-      <div className="py-6 h-full bg-inputBgDark w-full flex  flex-col-reverse  justify-start items-start px-1 ">
+      <div className="py-6  bg-inputBgDark w-full flex h-full  flex-col-reverse   justify-start items-start px-1 ">
         {mapMessage()}
         {showContextMenu && user?.id == selectedGroupMessage?.author.id && (
           <ContextMenu />

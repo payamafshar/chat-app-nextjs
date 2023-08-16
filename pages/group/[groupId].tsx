@@ -151,10 +151,10 @@ const GroupChanelPage = () => {
 
       <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
         <div className=" flex justify-between items-center   border-b  mb-4   ">
-          <div className="mr-14 ">
+          <div className="mr-10 -p-2">
             <GroupModal />
           </div>
-          <div className="">
+          <div className=" flex justify-center items-center p-2">
             <UserGroupIcon className="text-textInner w-8 h-8 " />
           </div>
         </div>
@@ -170,7 +170,7 @@ const GroupChanelPage = () => {
       </div>
 
       <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  scrollbar ">
-        <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
+        <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1  ">
           <GroupMessage online={online} />
         </div>
 
