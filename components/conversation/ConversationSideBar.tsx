@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import GroupSideBarItem from "../group/GroupSideBarItem";
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import QuitIcon from "@heroicons/react/24/outline/ArrowLeftOnRectangleIcon";
+import ChatBubbleBottomCenterIcon from "@heroicons/react/24/outline/ChatBubbleBottomCenterIcon";
 
 const CoversationSideBar = () => {
   const router = useRouter();
@@ -58,16 +59,17 @@ const CoversationSideBar = () => {
       <aside
         className={`bg-inputBgDark flex flex-col w-4/5 h-screen overflow-y-scroll scrollbar `}
       >
-        <div className="flex flex-col justify-between  p-6 sticky  bg-blackSmooth  top-0">
-          <div className=" ">
+        <div className="flex flex-col md:justify-between justify-center bg-blackSmooth items-center p-2 sticky    top-0">
+          <div className=" mt-2 flex  justify-center items-center ">
             <input
               value={value}
               placeholder="Search..."
               onChange={handleSearchInputChange}
-              className=" w-full outline-none text-textInner font-semibold placeholder:text-sm  bg-inputBgDark p-2 rounded-md"
+              className=" hidden md:flex w-full outline-none text-textInner font-semibold placeholder:text-sm  bg-inputBgDark p-2 rounded-md"
             />
+            <ChatBubbleBottomCenterIcon className=" h-6 w-6 block md:hidden justify-center text-textInner" />
           </div>
-          <div className="flex justify-evenly mt-6   items-center">
+          <div className="flex-col md:flex md:flex-row-reverse  w-full    justify-center  md:justify-evenly mt-6   items-cener ">
             {chatTypes.map((item) => (
               <button
                 key={item.label}
@@ -76,7 +78,7 @@ const CoversationSideBar = () => {
                   selectedConversationType == item.type
                     ? "bg-inputBgDark"
                     : "bg-blackSmooth"
-                } p-1.5 text-textInner text-sm font-semibold px-4 py-2 mb-2   rounded-lg`}
+                }  text-textInner text-xs font-semibold  py-1.5 px-0.5  mb-2 flex justify-center  items-center rounded-md`}
               >
                 {item.label}
               </button>
@@ -84,7 +86,7 @@ const CoversationSideBar = () => {
           </div>
         </div>
 
-        <div className="  h-full flex-1 flex-col justify-start px-6 ">
+        <div className="  h-full flex-1 flex-col justify-start px-2 md:px-6 ">
           {selectedConversationType == "private"
             ? conversations?.map((conversation) => {
                 return (

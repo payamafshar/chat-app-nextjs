@@ -101,8 +101,8 @@ const ConversationMessage = () => {
 
       if (currentMessage.author.id == nextMessage.author.id) {
         return (
-          <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-12    ">
-            <div className="text-textInner  px-10 ml-3">
+          <div className=" flex flex-col-reverse   justify-start items-center mb-2  md:px-4     ">
+            <div className="text-textInner px-10  md:px-12 ml-3">
               <div onContextMenu={(e) => onContextMenu(e, message)}>
                 {" "}
                 {message.content}

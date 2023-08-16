@@ -23,10 +23,10 @@ const ConversationSideBarItem: React.FC<Props> = ({ conversation }) => {
     <>
       <div
         onClick={() => handleClick(id)}
-        className="flex mt-4 cursor-pointer "
+        className=" flex mt-4 cursor-pointer "
       >
-        <div className="bg-buttonBgDark w-12 h-12 rounded-full"></div>
-        <div className="flex flex-col ml-3 justify-evenly">
+        <div className="bg-buttonBgDark w-10  h-9 md:w-12 md:h-12 rounded-full"></div>
+        <div className="hidden md:flex flex-col ml-3 justify-evenly">
           <span className="font-bold text-sm text-textInner">
             {recipientConversation.username}
           </span>

@@ -21,8 +21,8 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
         onClick={() => handleClick(id)}
         className="flex mt-4 cursor-pointer "
       >
-        <div className="bg-textInner w-12 h-12 rounded-full"></div>
-        <div className="flex flex-col ml-3 justify-evenly">
+        <div className="bg-white w-10  h-9 md:w-12 md:h-12 rounded-full"></div>
+        <div className="hidden md:flex flex-col ml-3 justify-evenly">
           <span className="font-bold text-sm text-textInner">
             {title && title?.length > 5
               ? title.substring(0, 6) + "..."

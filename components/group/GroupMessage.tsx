@@ -140,8 +140,8 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
 
       if (currentMessage.author.id == nextMessage.author.id) {
         return (
-          <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-12    ">
-            <div className="text-textInner cursor-pointer px-10 ml-3">
+          <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-10 md:px-4    ">
+            <div className="text-textInner cursor-pointer  md:px-10 ml-3">
               <div onContextMenu={(e) => onContextMenu(e, message)}>
                 {" "}
                 {message.content}
@@ -189,7 +189,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
 
   return (
     <div className="flex flex-row-reverse  h-full ">
-      <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
+      <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[59px] md:w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
         {speceficGroup?.users.map((user) => (
           <div
             onContextMenu={(e) => handleUserSideBarClick(e, user)}

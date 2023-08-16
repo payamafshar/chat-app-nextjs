@@ -60,7 +60,7 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
   };
 
   return (
-    <div className=" flex flex-col px-12  justify-end items-start ">
+    <div className=" flex flex-col md:px-4  justify-end items-start ">
       <div className="flex justify-center items-center mb-2">
         <div className="h-10 w-10 rounded-full bg-buttonBgDark "></div>
         <div>
@@ -75,7 +75,7 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
               {message.author.username}
             </p>
             <p className="text-xs font-semibold ml-2 flex-1 whitespace-nowrap text-white">
-              {message.createdAt}
+              {message.createdAt.substring(0, 18)}
             </p>
           </div>
           <div className="text-textInner cursor-pointer  px-1 ml-2">
