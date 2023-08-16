@@ -44,11 +44,11 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
     dispatch(updateType("group"));
   }, [groupId]);
 
-  // useEffect(() => {
-  //   const handleClick = () => dispatch(toggleUserContextMenu(false));
-  //   window.addEventListener("dblclick", handleClick);
-  //   return () => window.removeEventListener("dblclick", handleClick);
-  // }, []);
+  useEffect(() => {
+    const handleClick = () => dispatch(toggleUserContextMenu(false));
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
   const messages = useSelector(
     (state: RootState) => state.groupMessage.messages
   );
@@ -132,8 +132,8 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
       if (currentMessage.author.id == nextMessage.author.id) {
         return (
           <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-12    ">
-            <div className="text-textInner  px-10 ml-3">
-              <div onClick={(e) => onContextMenu(e, message)}>
+            <div className="text-textInner cursor-pointer px-10 ml-3">
+              <div onContextMenu={(e) => onContextMenu(e, message)}>
                 {" "}
                 {message.content}
               </div>
@@ -183,8 +183,8 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
       <div className="bg-blackSmooth p-5 flex flex-col   overflow-y-scroll justify-start items-center   scrollbar w-[91px] fixed h-[calc(100vh_-_140px)] right-0 ">
         {speceficGroup?.users.map((user) => (
           <div
-            onClick={(e) => handleUserSideBarClick(e, user)}
-            className="flex relative  flex-col mb-4 justify-center items-center w-full "
+            onContextMenu={(e) => handleUserSideBarClick(e, user)}
+            className="flex relative  flex-col cursor-pointer mb-4 justify-center items-center w-full "
           >
             <div className="bg-buttonBgDark h-10 w-10 rounded-full  "></div>
             <div className="mb-2 font-bold  text-white  p-1 text-xs">

@@ -1,4 +1,6 @@
+import React from "react";
 import { useRouter } from "next/router";
+
 import { useDispatch, useSelector } from "react-redux";
 import { GroupMessageType, User } from "../../utils/types/types";
 import { AppDispatch, RootState } from "../../store";
@@ -26,6 +28,11 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { groupId } = router.query;
+  React.useEffect(() => {
+    const handleClick = () => dispatch(toggleContextMenu(false));
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
 
   const selectedGroupMessage = useSelector(
     (state: RootState) => state.messageContainer.selectedGroupMessage
@@ -71,8 +78,8 @@ const FormatedGroupMessage: React.FC<FormatedProps> = ({
               {message.createdAt}
             </p>
           </div>
-          <div className="text-textInner  px-1 ml-2">
-            <div onClick={(e) => onContextMenu(e, message)}>
+          <div className="text-textInner cursor-pointer  px-1 ml-2">
+            <div onContextMenu={(e) => onContextMenu(e, message)}>
               {message.content}
             </div>
             <form onSubmit={(e) => handleEditMessageSubmit(e)}>

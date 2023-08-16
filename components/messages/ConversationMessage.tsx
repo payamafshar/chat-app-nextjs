@@ -45,6 +45,11 @@ const ConversationMessage = () => {
     dispatch(fetchConversationMessagesThunk(id));
   }, [conversationId]);
 
+  useEffect(() => {
+    const handleClick = () => dispatch(toggleContextMenu(false));
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
   const onContextMenu = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     message: MessageType
@@ -98,7 +103,7 @@ const ConversationMessage = () => {
         return (
           <div className=" flex flex-col-reverse   justify-start items-center mb-2 px-12    ">
             <div className="text-textInner  px-10 ml-3">
-              <div onClick={(e) => onContextMenu(e, message)}>
+              <div onContextMenu={(e) => onContextMenu(e, message)}>
                 {" "}
                 {message.content}
               </div>
