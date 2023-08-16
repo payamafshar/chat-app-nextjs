@@ -60,16 +60,26 @@ const CoversationSideBar = () => {
         className={`bg-inputBgDark flex flex-col w-4/5 h-screen overflow-y-scroll scrollbar `}
       >
         <div className="flex flex-col md:justify-between justify-center bg-blackSmooth items-center p-2 sticky    top-0">
-          <div className=" mt-2 flex  justify-center items-center ">
+          <div className=" hidden md:flex mt-2  justify-center items-center ">
             <input
               value={value}
               placeholder="Search..."
               onChange={handleSearchInputChange}
-              className=" hidden md:flex w-full outline-none text-textInner font-semibold placeholder:text-sm  bg-inputBgDark p-2 rounded-md"
+              className=" hidden md:flex w-full outline-none text-textInner font-semibold placeholder:text-sm mt-2 bg-inputBgDark p-2 rounded-md"
             />
-            <ChatBubbleBottomCenterIcon className=" h-6 w-6 block md:hidden justify-center text-textInner" />
           </div>
-          <div className="flex-col md:flex md:flex-row-reverse  w-full    justify-center  md:justify-evenly mt-6   items-cener ">
+          <div className="flex-col md:flex md:flex-row-reverse  w-full    justify-center  md:justify-evenly mt-4   items-center ">
+            <ChatBubbleBottomCenterIcon
+              onClick={() =>
+                dispatch(
+                  updateType(
+                    selectedConversationType == "private" ? "group" : "private"
+                  )
+                )
+              }
+              className=" h-6  items-center w-full mt-1 px-0.5 block md:hidden justify-center text-textInner"
+            />
+
             {chatTypes.map((item) => (
               <button
                 key={item.label}
@@ -78,7 +88,7 @@ const CoversationSideBar = () => {
                   selectedConversationType == item.type
                     ? "bg-inputBgDark"
                     : "bg-blackSmooth"
-                }  text-textInner text-xs font-semibold  py-1.5 px-0.5  mb-2 flex justify-center  items-center rounded-md`}
+                }  text-textInner text-xs font-semibold  py-1.5 px-0.5 md:p-2  mb-2 flex justify-center  items-center rounded-md`}
               >
                 {item.label}
               </button>

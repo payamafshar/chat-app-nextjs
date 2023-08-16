@@ -150,11 +150,11 @@ const GroupChanelPage = () => {
       </div>
 
       <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
-        <div className=" flex justify-between items-center   border-b  mb-4   ">
-          <div className="mr-10 -p-2">
+        <div className=" flex justify-between items-center   border-b  ml-5   ">
+          <div className="md:mr-5 md:-p-2  mr-2">
             <GroupModal />
           </div>
-          <div className=" flex justify-center items-center p-2">
+          <div className=" flex justify-center items-center -mr-3 md:mr-1.5 ">
             <UserGroupIcon className="text-textInner w-8 h-8 " />
           </div>
         </div>
