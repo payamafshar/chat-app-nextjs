@@ -5,8 +5,18 @@ import { useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { updateType } from "../../store/selectedSlice";
-import { addGroup, updateGroup } from "../../store/groups/groupSlice";
-import { Group, GroupMessageEventPayload } from "../../utils/types/types";
+import {
+  addGroup,
+  addUserToGroup,
+  removeGroup,
+  updateGroup,
+} from "../../store/groups/groupSlice";
+import {
+  AddUserToGroupResponse,
+  DeleteUserFromGroupResponse,
+  Group,
+  GroupMessageEventPayload,
+} from "../../utils/types/types";
 import { SocketContext } from "../../utils/context/SocketContext";
 import { addGroupMessage } from "../../store/groupMessage/groupMessageSlice";
 
@@ -27,9 +37,25 @@ const GroupPage = () => {
       dispatch(addGroup(payload));
     });
 
+    socket.on(
+      "onGroupRemovedRecipient",
+      (payload: DeleteUserFromGroupResponse) => {
+        const { group, recipientId } = payload;
+
+        dispatch(removeGroup(group));
+      }
+    );
+
+    socket.on("recipientAddedGroup", (payload: Group) => {
+      console.log(payload);
+      dispatch(addGroup(payload));
+    });
+
     return () => {
       socket.off("onGroup");
       socket.off("onGroupCreate");
+      socket.off("onGroupRemovedRecipient");
+      socket.off("recipientAddedGroup");
     };
   }, []);
 

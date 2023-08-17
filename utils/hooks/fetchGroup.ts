@@ -8,9 +8,10 @@ export function useGroupGuard() {
   const [loading, setLoading] = useState(false);
   const controller = new AbortController();
   const router = useRouter();
-  const { groupId } = router.query;
   useEffect(() => {
-    fetchGroupByIdGuard(Number(groupId))
+    const groupId = router.query.groupId;
+    console.log(router.query);
+    fetchGroupByIdGuard(parseInt(groupId))
       .then((res) => setLoading(true))
       .catch((err) => {
         setLoading(false);

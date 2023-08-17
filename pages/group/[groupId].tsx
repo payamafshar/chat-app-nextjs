@@ -81,12 +81,17 @@ const GroupChanelPage = () => {
       dispatch(addUserToGroup(payload));
     });
 
-    socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
+    // socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
+    //   const { group } = payload;
+    //   dispatch(addGroupMessage(payload));
+    //   dispatch(updateGroup({ group, type: UpdateGroupAction.NEW_MESSAGE }));
+    // });
+    socket.on("onGroup", (payload: GroupMessageEventPayload) => {
       const { group } = payload;
-      dispatch(addGroupMessage(payload));
       dispatch(updateGroup({ group, type: UpdateGroupAction.NEW_MESSAGE }));
+      dispatch(addGroupMessage(payload));
+      console.log("group");
     });
-
     socket.on(
       "onDeleteGroupMessage",
       (payload: DeleteGroupMessageEventPayload) => {
@@ -113,6 +118,10 @@ const GroupChanelPage = () => {
         dispatch(deleteUserFromGroupReducer(payload));
       }
     );
+    socket.on("recipientAddedGroup", (payload: Group) => {
+      console.log(payload);
+      dispatch(addGroup(payload));
+    });
 
     socket.on("onUpdateGroupMessage", (payload: GroupMessageType) => {
       dispatch(updateGroupMessage(payload));
@@ -130,6 +139,7 @@ const GroupChanelPage = () => {
       socket.off("onUserDeletetFromGroup");
       socket.off("onGroupRemovedRecipient");
       socket.off("onUserAddedGroup");
+      socket.off("recipientAddedGroup");
     };
   }, [groupId]);
 
