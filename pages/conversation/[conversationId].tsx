@@ -24,11 +24,14 @@ import {
   updateConversation,
 } from "../../store/conversations/conversationSlice";
 import { updateType } from "../../store/selectedSlice";
+import { fetchConversationByIdThunk } from "../../store/conversations/thunkConversation";
+import { useConversationGuard } from "../../utils/hooks/fetchConversation";
 
 const ConversationChanellPage = () => {
   const { user, loading } = useAuth();
   const [msg, setMsg] = useState<string>("");
   const [typing, setTyping] = useState(false);
+  const [show, setShow] = useState(false);
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
   const [recipientTyping, setRecipientTyping] = useState(false);
   const socket = useContext(SocketContext);
@@ -94,6 +97,9 @@ const ConversationChanellPage = () => {
     };
   }, [conversationId]);
 
+  //temporary
+  const { loading: conversationLoading } = useConversationGuard();
+
   const handleUserTyping = () => {
     // fireing subscribe message Event On BackEnd and that event sendUser status typing
     //on another event(userStartTyping, userStopTyping) and we listen that events to get recipient status
@@ -138,11 +144,13 @@ const ConversationChanellPage = () => {
 
       <div className="bg-blackSmooth col-span-9  flex justify-center p-6 items-center h-[75px]  w-full">
         <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
-          <p className="text-base h-2/4 ">
-            {user?.id == speceficConversation?.creator.id
-              ? speceficConversation?.recipient.username
-              : speceficConversation?.creator.username}
-          </p>
+          {conversationLoading && (
+            <p className="text-base h-2/4 ">
+              {user?.id == speceficConversation?.creator.id
+                ? speceficConversation?.recipient.username
+                : speceficConversation?.creator.username}
+            </p>
+          )}
           {recipientTyping && (
             <div className="text-textInner text-xs h-2/4 p-3"> typing... </div>
           )}
@@ -151,7 +159,7 @@ const ConversationChanellPage = () => {
 
       <div className="col-span-9 row-span-6  flex flex-col justify-start items-start  overflow-y-scroll  scrollbar ">
         <div className="bg-inputBgDark w-full  flex-1 flex-col   justify-start items-start px-1 ">
-          <ConversationMessage />
+          {conversationLoading && <ConversationMessage />}
         </div>
 
         <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">

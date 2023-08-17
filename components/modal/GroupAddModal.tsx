@@ -67,7 +67,12 @@ export const GroupModal = () => {
   return (
     <>
       <div>
-        <UserPlusIcon onClick={handleOpen} className="text-textInner w-7 h-7" />
+        {
+          <UserPlusIcon
+            onClick={handleOpen}
+            className="text-textInner w-7 h-7"
+          />
+        }
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"

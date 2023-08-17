@@ -22,6 +22,7 @@ import FormatedGroupMessage from "../group/FormatedGroupMessage";
 const ConversationMessage = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { conversationId } = router.query;
   const elemRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -41,8 +42,10 @@ const ConversationMessage = () => {
 
   useEffect(() => {
     const id = Number(conversationId);
-
-    dispatch(fetchConversationMessagesThunk(id));
+    setLoading(true);
+    dispatch(fetchConversationMessagesThunk(id))
+      .then((res) => setLoading(false))
+      .catch((err) => setLoading(false));
   }, [conversationId]);
 
   useEffect(() => {
@@ -155,6 +158,8 @@ const ConversationMessage = () => {
           <ContextMenu />
         )}
       </div>
+
+      {loading && <div className=" h-screen w-full">loadingg ........</div>}
     </div>
   );
 };

@@ -52,9 +52,7 @@ export default function TransitionsModal() {
   const selectedGroupArray = useSelector(
     (state: RootState) => state.selectedConversationType.finalSelect
   );
-  const speceficGroup = useSelector((state: RootState) =>
-    selectGroupById(state, Number(groupId))
-  );
+
   const groupUsernameArray = selectedGroupArray.map((user) => user.username);
 
   React.useEffect(() => {

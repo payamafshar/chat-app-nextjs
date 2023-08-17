@@ -17,20 +17,18 @@ const GroupPage = () => {
   const socket = useContext(SocketContext);
   useEffect(() => {
     dispatch(updateType("group"));
-
-    socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
+    socket.on("onGroup", (payload: GroupMessageEventPayload) => {
       const { group } = payload;
-      dispatch(updateGroup(group));
-      console.log(group);
-
-      console.log("gp happpen");
+      dispatch(updateGroup({ group }));
+      dispatch(addGroupMessage(payload));
+      console.log("group");
     });
     socket.on("onGroupCreate", (payload: Group) => {
       dispatch(addGroup(payload));
     });
 
     return () => {
-      socket.off("onGroupMessageCreate");
+      socket.off("onGroup");
       socket.off("onGroupCreate");
     };
   }, []);

@@ -3,10 +3,13 @@ import CoversationSideBar from "../../components/conversation/ConversationSideBa
 import { useAuth } from "../../utils/hooks/useAuth";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { addMessages } from "../../store/messages/messageSlice";
-import { updateConversation } from "../../store/conversations/conversationSlice";
+import {
+  addConversation,
+  updateConversation,
+} from "../../store/conversations/conversationSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
-import { MessageEventPayload } from "../../utils/types/types";
+import { Conversation, MessageEventPayload } from "../../utils/types/types";
 import { SocketContext } from "../../utils/context/SocketContext";
 
 const Conversation = () => {
@@ -22,9 +25,13 @@ const Conversation = () => {
       dispatch(addMessages(payload));
       console.log("dispatch happpen onMessage");
     });
+    socket.on("onConversationCreate", (payload: Conversation) => {
+      dispatch(addConversation(payload));
+    });
 
     return () => {
       socket.off("onMessage");
+      socket.off("onConversationCreate");
     };
   }, []);
 

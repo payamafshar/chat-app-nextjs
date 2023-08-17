@@ -170,3 +170,12 @@ export type DeleteUserFromGroupParams = {
   recipientId: number;
   groupId: number;
 };
+
+export enum UpdateGroupAction {
+  NEW_MESSAGE = "newMessage",
+}
+
+export type UpdateGroupPayload = {
+  type?: UpdateGroupAction;
+  group: Group;
+};

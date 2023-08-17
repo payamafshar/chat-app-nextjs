@@ -6,7 +6,7 @@ export function getConversations() {
 }
 
 export function getConversationById(conversationId: number) {
-  return http.get<Conversation>(`/conversation/${conversationId}`);
+  return http.get<Conversation>(`/conversation/find/${conversationId}`);
 }
 export function postCreateConversation(data: CreateConversationParams) {
   return http.post("/conversation/createConversation", data);

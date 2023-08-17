@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Conversation } from "../../utils/types/types";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useAuth } from "../../utils/hooks/useAuth";
 
 type Props = {

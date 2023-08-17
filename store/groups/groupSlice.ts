@@ -3,6 +3,8 @@ import {
   AddUserToGroupResponse,
   DeleteUserFromGroupResponse,
   Group,
+  UpdateGroupAction,
+  UpdateGroupPayload,
 } from "../../utils/types/types";
 import {
   addUserToGroupThunk,
@@ -30,15 +32,33 @@ const groupSlice = createSlice({
       state.groups.unshift(action.payload);
     },
 
-    updateGroup: (state, action: PayloadAction<Group>) => {
+    updateGroup: (state, action: PayloadAction<UpdateGroupPayload>) => {
+      const { group, type } = action.payload;
+
+      const findedGroupIndex = state.groups.findIndex((c) => c.id === group.id);
+
+      switch (type) {
+        case UpdateGroupAction.NEW_MESSAGE: {
+          console.log("Inside UpdateGroupAction.NEW_MESSAGE");
+          state.groups.splice(findedGroupIndex, 1);
+          state.groups.unshift(group);
+          break;
+        }
+        default: {
+          console.log("Default Case for updateGroup");
+          state.groups[findedGroupIndex] = group;
+          break;
+        }
+      }
+    },
+
+    removeGroup: (state, action: PayloadAction<Group>) => {
       const group = action.payload;
 
-      const findedConversationIndex = state.groups.findIndex(
-        (c) => c.id === group.id
-      );
+      console.log("inside delete recipient group remove");
+      const findedGroupIndex = state.groups.findIndex((g) => g.id == group.id);
 
-      state.groups.splice(findedConversationIndex, 1);
-      state.groups.unshift(group);
+      state.groups.splice(findedGroupIndex, 1);
     },
 
     addUserToGroup: (state, action: PayloadAction<AddUserToGroupResponse>) => {
@@ -111,6 +131,7 @@ export const {
   updateGroup,
   addUserToGroup,
   deleteUserFromGroupReducer,
+  removeGroup,
 } = groupSlice.actions;
 
 export default groupSlice.reducer;
