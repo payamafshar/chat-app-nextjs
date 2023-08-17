@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   deleteUserFromGroup,
+  fetchGroupByIdGuard,
   getGroups,
   postAddUserToGroup,
   postcreateGroup,
@@ -33,5 +34,11 @@ export const deleteUserFromGroupThunk = createAsyncThunk(
   "deleteUser/group",
   async (data: DeleteUserFromGroupParams) => {
     return deleteUserFromGroup(data);
+  }
+);
+export const fetchGroupByIdThunk = createAsyncThunk(
+  "fetchById/group",
+  async (groupId: number) => {
+    return fetchGroupByIdGuard(groupId);
   }
 );

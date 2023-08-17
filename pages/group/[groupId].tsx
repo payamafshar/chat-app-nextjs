@@ -37,6 +37,7 @@ import GroupMessage from "../../components/group/GroupMessage";
 import { postCreateGroupMessage } from "../../utils/services/groupMessageService";
 import GroupModal from "../../components/modal/GroupAddModal";
 import { useGroupGuard } from "../../utils/hooks/fetchGroup";
+import { fetchGroupByIdGuard } from "../../utils/services/groupService";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
@@ -51,7 +52,6 @@ const GroupChanelPage = () => {
   const speceficGroup = useSelector((state: RootState) =>
     selectGroupById(state, Number(groupId))
   );
-
   const showUserContextMenu = useSelector(
     (state: RootState) => state.groupParticipent.showUserContextMenu
   );
@@ -80,17 +80,17 @@ const GroupChanelPage = () => {
     socket.on("onUserAddedGroup", (payload: AddUserToGroupResponse) => {
       dispatch(addUserToGroup(payload));
     });
-
     // socket.on("onGroupMessageCreate", (payload: GroupMessageEventPayload) => {
     //   const { group } = payload;
     //   dispatch(addGroupMessage(payload));
     //   dispatch(updateGroup({ group, type: UpdateGroupAction.NEW_MESSAGE }));
     // });
+    //** deleting beacuse when user in other group page and he added to group not reciving new group message  */
+    //but this way he can
     socket.on("onGroup", (payload: GroupMessageEventPayload) => {
       const { group } = payload;
       dispatch(updateGroup({ group, type: UpdateGroupAction.NEW_MESSAGE }));
       dispatch(addGroupMessage(payload));
-      console.log("group");
     });
     socket.on(
       "onDeleteGroupMessage",
@@ -134,12 +134,13 @@ const GroupChanelPage = () => {
       socket.off("onDeleteGroupMessage");
       socket.off("onGroupJoin");
       socket.off("onGroupCreate");
-      socket.off("onGroupMessageCreate");
+      // socket.off("onGroupMessageCreate");
       socket.off("onUpdateGroupMessage");
       socket.off("onUserDeletetFromGroup");
       socket.off("onGroupRemovedRecipient");
       socket.off("onUserAddedGroup");
       socket.off("recipientAddedGroup");
+      socket.off("onGroup");
     };
   }, [groupId]);
 
@@ -163,8 +164,6 @@ const GroupChanelPage = () => {
     }
   };
 
-  const handleUserTyping = () => {};
-
   return (
     <>
       <div className="h-screen w-full grid grid-cols-12 grid-rows-full ">
@@ -184,9 +183,7 @@ const GroupChanelPage = () => {
 
           <div className="text-textInner flex flex-col items-center justify-between h-full text-lg font-bold">
             {groupLoading && (
-              <p className="text-base h-2/4 ">
-                {speceficGroup?.title || `TITLE ${speceficGroup?.id}`}
-              </p>
+              <p className="text-base h-2/4 ">{speceficGroup?.title || ``}</p>
             )}
             {recipientTyping && (
               <div className="text-textInner text-xs h-2/4 p-3">
@@ -205,11 +202,10 @@ const GroupChanelPage = () => {
           <div className="bg-blackSmooth w-full  col-span-9  p-2  flex justify-start  sticky bottom-0 ">
             <form
               onSubmit={handleSubmitMessage}
-              className=" w-11/12 flex justify-between items-center h-[55px]  bg-inputBgDark outline-none   rounded-md px-7 "
+              className=" w-10/12 flex justify-between items-center h-[55px]  bg-inputBgDark outline-none   rounded-md px-7 "
             >
               <PlusCircleIcon className="h-7 w-7 text-textInner" />
               <input
-                onKeyDown={handleUserTyping}
                 onChange={handleInputChange}
                 value={msg}
                 placeholder="Write Message ..."

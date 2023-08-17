@@ -42,6 +42,8 @@ const ConversationChanellPage = () => {
     selectConversationById(state, Number(conversationId!))
   );
 
+  const { loading: conversationLoading } = useConversationGuard();
+
   useEffect(() => {
     socket.emit("onConversationJoin", { conversationId });
 
@@ -98,7 +100,6 @@ const ConversationChanellPage = () => {
   }, [conversationId]);
 
   //temporary
-  const { loading: conversationLoading } = useConversationGuard();
 
   const handleUserTyping = () => {
     // fireing subscribe message Event On BackEnd and that event sendUser status typing
@@ -151,6 +152,7 @@ const ConversationChanellPage = () => {
                 : speceficConversation?.creator.username}
             </p>
           )}
+
           {recipientTyping && (
             <div className="text-textInner text-xs h-2/4 p-3"> typing... </div>
           )}

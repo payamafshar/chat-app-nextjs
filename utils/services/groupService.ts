@@ -30,5 +30,5 @@ export function deleteUserFromGroup(data: DeleteUserFromGroupParams) {
   );
 }
 export function fetchGroupByIdGuard(groupId: number) {
-  return http.get<Group[]>(`group/find/${groupId}`);
+  return http.get<Group>(`group/find/${groupId}`);
 }
