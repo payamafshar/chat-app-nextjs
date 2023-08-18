@@ -9,7 +9,6 @@ export function useGroupGuard() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const controller = new AbortController();
-  const dispatch = useDispatch<AppDispatch>();
   const groupId = router.query.groupId;
   useEffect(() => {
     console.log(router.query);

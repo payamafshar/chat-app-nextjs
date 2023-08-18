@@ -30,6 +30,7 @@ import { useConversationGuard } from "../../utils/hooks/fetchConversation";
 const ConversationChanellPage = () => {
   const { user, loading } = useAuth();
   const [msg, setMsg] = useState<string>("");
+  // const [conversationLoading, setconversationLoading] = useState(true);
   const [typing, setTyping] = useState(false);
   const [show, setShow] = useState(false);
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();

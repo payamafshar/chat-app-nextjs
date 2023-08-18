@@ -1,11 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { deleteUserFromGroup } from "../../utils/services/groupService";
 import { useRouter } from "next/router";
-import { deleteUserFromGroupThunk } from "../../store/groups/thunkGroups";
+import {
+  deleteUserFromGroupThunk,
+  transferAdminThunk,
+} from "../../store/groups/thunkGroups";
 import { toggleUserContextMenu } from "../../store/groupParticipentContainerSlice";
+import { selectGroupById, updateGroup } from "../../store/groups/groupSlice";
+import { useAuth } from "../../utils/hooks/useAuth";
 
 const GroupSideBarContextMenu = () => {
+  const router = useRouter();
+  const { groupId } = router.query;
+  const { user } = useAuth();
+  const speceficGroup = useSelector((state: RootState) =>
+    selectGroupById(state, Number(groupId))
+  );
   const userContextMenuPoints = useSelector(
     (state: RootState) => state.groupParticipent.userPoints
   );
@@ -13,10 +23,8 @@ const GroupSideBarContextMenu = () => {
     (state: RootState) => state.groupParticipent.selectedUser
   );
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
 
   const handleDeleteUserFromGroup = () => {
-    const { groupId } = router.query;
     const grouId = Number(groupId);
     const data = {
       recipientId: selctedUser?.id!,
@@ -26,32 +34,70 @@ const GroupSideBarContextMenu = () => {
       dispatch(toggleUserContextMenu(false))
     );
   };
+
+  const handleTransferAdmin = () => {
+    const grouId = Number(groupId);
+    const data = {
+      username: selctedUser?.username!,
+      groupId: grouId,
+    };
+    dispatch(transferAdminThunk(data)).then((res) => console.log(res));
+    // dispatch(updateGroup(res.payload.data))
+
+    dispatch(toggleUserContextMenu(false));
+  };
   return (
     <div>
       <div
         style={{
-          left: Number(userContextMenuPoints.x) - 120,
+          left: Number(userContextMenuPoints.x) - 180,
           top: userContextMenuPoints.y,
         }}
         className={`bg-blackSmooth z-50 flex flex-col justify-start items-start rounded-md w-36  px-4 fixed  cursor-pointer`}
       >
-        <ul className="flex flex-col justify-center  items-start py-4">
-          <li
-            onClick={handleDeleteUserFromGroup}
-            className="text-white px-1 min-w-full font-semibold py-2  rounded-md hover:text-textInner"
-          >
-            Delete
-          </li>
-          <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
-            Mute
-          </li>
-          <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
-            Block
-          </li>
-          <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
-            Edit
-          </li>
-        </ul>
+        {speceficGroup?.creator.id == user?.id ? (
+          <ul className="flex flex-col justify-center  items-start py-4">
+            <li
+              onClick={handleDeleteUserFromGroup}
+              className="text-white px-1 min-w-full font-semibold py-2  rounded-md hover:text-textInner"
+            >
+              Delete
+            </li>
+            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
+              Profile
+            </li>
+            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
+              Add User
+            </li>
+            <li
+              onClick={handleTransferAdmin}
+              className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner"
+            >
+              Transfer Owner
+            </li>
+            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
+              Edit
+            </li>
+          </ul>
+        ) : speceficGroup?.owner?.id == user?.id ? (
+          <ul className="flex flex-col justify-center  items-start py-4">
+            <li
+              onClick={handleDeleteUserFromGroup}
+              className="text-white px-1 min-w-full font-semibold py-2  rounded-md hover:text-textInner"
+            >
+              Delete
+            </li>
+            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
+              Add User
+            </li>
+          </ul>
+        ) : (
+          <ul className="flex flex-col justify-center  items-start py-4">
+            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
+              Profile
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import {
   createGroupThunk,
   deleteUserFromGroupThunk,
   fetchGroupThunk,
+  transferAdminThunk,
 } from "./thunkGroups";
 import { RootState } from "..";
 import { group } from "console";
@@ -102,21 +103,31 @@ const groupSlice = createSlice({
       if (!findedGroup) return;
       findedGroup.users = addedUsersArray;
     });
-    builder.addCase(deleteUserFromGroupThunk.fulfilled, (state, action) => {
-      const {
-        recipientId,
-        group: { id: groupId },
-      } = action.payload.data;
-      console.log("inside delete reducer");
-
+    builder.addCase(transferAdminThunk.fulfilled, (state, action) => {
+      console.log(action.payload);
+      const { id: groupId } = action.payload.data;
       const findedGroup = state.groups.find((g) => g.id == groupId);
       if (!findedGroup) return;
-      const findUserIndex = findedGroup.users.findIndex(
-        (u) => u.id == recipientId
-      );
 
-      findedGroup.users.splice(findUserIndex, 1);
+      const groupIndex = state.groups.findIndex((g) => g.id == groupId);
+
+      state.groups[groupIndex] = action.payload.data;
     });
+    // builder.addCase(deleteUserFromGroupThunk.fulfilled, (state, action) => {
+    //   const {
+    //     recipientId,
+    //     group: { id: groupId },
+    //   } = action.payload.data;
+    //   console.log("inside delete reducer");
+
+    //   const findedGroup = state.groups.find((g) => g.id == groupId);
+    //   if (!findedGroup) return;
+    //   const findUserIndex = findedGroup.users.findIndex(
+    //     (u) => u.id == recipientId
+    //   );
+
+    //   findedGroup.users.splice(findUserIndex, 1);
+    // });
   },
 });
 const selectGroups = (state: RootState) => state.groups.groups;

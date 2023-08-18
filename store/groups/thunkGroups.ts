@@ -3,6 +3,7 @@ import {
   deleteUserFromGroup,
   fetchGroupByIdGuard,
   getGroups,
+  patchTransferAdmin,
   postAddUserToGroup,
   postcreateGroup,
 } from "../../utils/services/groupService";
@@ -10,6 +11,7 @@ import {
   AddUserToGroupParams,
   CreateGroupParams,
   DeleteUserFromGroupParams,
+  TransferAdminParams,
 } from "../../utils/types/types";
 
 export const fetchGroupThunk = createAsyncThunk("fetch/groups", async () => {
@@ -40,5 +42,11 @@ export const fetchGroupByIdThunk = createAsyncThunk(
   "fetchById/group",
   async (groupId: number) => {
     return fetchGroupByIdGuard(groupId);
+  }
+);
+export const transferAdminThunk = createAsyncThunk(
+  "fetchById/group",
+  async (data: TransferAdminParams) => {
+    return patchTransferAdmin(data);
   }
 );

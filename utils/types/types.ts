@@ -179,3 +179,8 @@ export type UpdateGroupPayload = {
   type?: UpdateGroupAction;
   group: Group;
 };
+
+export type TransferAdminParams = {
+  username: string;
+  groupId: number;
+};

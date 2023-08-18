@@ -5,6 +5,7 @@ import {
   DeleteUserFromGroupParams,
   DeleteUserFromGroupResponse,
   Group,
+  TransferAdminParams,
 } from "../types/types";
 import http from "./httpService";
 
@@ -31,4 +32,9 @@ export function deleteUserFromGroup(data: DeleteUserFromGroupParams) {
 }
 export function fetchGroupByIdGuard(groupId: number) {
   return http.get<Group>(`group/find/${groupId}`);
+}
+export function patchTransferAdmin(data: TransferAdminParams) {
+  return http.patch<Group>(`group/owner/${data.groupId}`, {
+    username: data.username,
+  });
 }

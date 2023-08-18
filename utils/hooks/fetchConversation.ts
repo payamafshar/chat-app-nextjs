@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { fetchGroupByIdGuard } from "../services/groupService";
 import { useRouter } from "next/router";
-import { getConversationById } from "../services/conversationService";
-import { fetchConversationByIdThunk } from "../../store/conversations/thunkConversation";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
+import { getConversationByIdGuard } from "../services/conversationService";
 
 export function useConversationGuard() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const controller = new AbortController();
-  const router = useRouter();
-  const { conversationId } = router.query;
+  const conversationId = router.query.conversationId;
   useEffect(() => {
     if (router.isReady) {
-      fetchGroupByIdGuard(Number(conversationId))
+      getConversationByIdGuard(Number(conversationId))
         .then((res) => setLoading(true))
         .catch((err) => {
           setLoading(false);
@@ -24,7 +21,7 @@ export function useConversationGuard() {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [conversationId]);
 
   return { loading };
 }
