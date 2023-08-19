@@ -16,6 +16,7 @@ import {
   DeleteUserFromGroupResponse,
   Group,
   GroupMessageEventPayload,
+  UserLeaveGroupPayload,
 } from "../../utils/types/types";
 import { SocketContext } from "../../utils/context/SocketContext";
 import { addGroupMessage } from "../../store/groupMessage/groupMessageSlice";
@@ -37,6 +38,10 @@ const GroupPage = () => {
       dispatch(addGroup(payload));
     });
 
+    socket.on("onUserLeaveGroup", (payload: UserLeaveGroupPayload) => {
+      const { group, issuerId } = payload;
+      dispatch(removeGroup(group));
+    });
     socket.on(
       "onGroupRemovedRecipient",
       (payload: DeleteUserFromGroupResponse) => {

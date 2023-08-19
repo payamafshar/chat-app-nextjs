@@ -58,7 +58,7 @@ const groupSlice = createSlice({
 
       console.log("inside delete recipient group remove");
       const findedGroupIndex = state.groups.findIndex((g) => g.id == group.id);
-
+      console.log("11111111111111111111111111");
       state.groups.splice(findedGroupIndex, 1);
     },
 

@@ -1,6 +1,9 @@
 import React from "react";
 import { Group } from "../../utils/types/types";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { userLeaveGroupThunk } from "../../store/groups/thunkGroups";
 
 type Props = {
   group: Group;
@@ -10,14 +13,19 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
   const router = useRouter();
 
   const { id, title, lastMessageSent } = group;
-
+  const dispatch = useDispatch<AppDispatch>();
   const handleClick = (id: number) => {
     router.push(`/group/${id}`);
   };
 
+  const handleUserLeave = () => {
+    dispatch(userLeaveGroupThunk(id));
+    console.log("right clicked");
+  };
   return (
     <>
       <div
+        onContextMenu={handleUserLeave}
         onClick={() => handleClick(id)}
         className="flex mt-4 cursor-pointer "
       >
