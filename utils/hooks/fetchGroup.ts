@@ -11,7 +11,6 @@ export function useGroupGuard() {
   const controller = new AbortController();
   const groupId = router.query.groupId;
   useEffect(() => {
-    console.log(router.query);
     if (router.isReady) {
       fetchGroupByIdGuard(Number(groupId))
         .then((res) => setLoading(true))

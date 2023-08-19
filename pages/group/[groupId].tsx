@@ -11,6 +11,8 @@ import {
   AddUserToGroupResponse,
   DeleteUserFromGroupResponse,
   UpdateGroupAction,
+  TransferOwnerEventPayload,
+  UserLeaveGroupPayload,
 } from "../../utils/types/types";
 import CoversationSideBar from "../../components/conversation/ConversationSideBar";
 import { SocketContext } from "../../utils/context/SocketContext";
@@ -41,6 +43,7 @@ import { fetchGroupByIdGuard } from "../../utils/services/groupService";
 
 const GroupChanelPage = () => {
   const { user, loading } = useAuth();
+  const { loading: groupLoading } = useGroupGuard();
   const [msg, setMsg] = useState<string>("");
   const [recipientTyping, setRecipientTyping] = useState(false);
   const [online, setOnline] = useState<User[]>([]);
@@ -52,13 +55,10 @@ const GroupChanelPage = () => {
   const speceficGroup = useSelector((state: RootState) =>
     selectGroupById(state, Number(groupId))
   );
-  const showUserContextMenu = useSelector(
-    (state: RootState) => state.groupParticipent.showUserContextMenu
-  );
-  const { loading: groupLoading } = useGroupGuard();
 
   useEffect(() => {
     dispatch(updateType("group"));
+
     socket.emit("getOnlineGroupUsers", { groupId });
     const interval = setInterval(() => {
       socket.emit("getOnlineGroupUsers", { groupId });
@@ -127,6 +127,22 @@ const GroupChanelPage = () => {
       dispatch(updateGroupMessage(payload));
     });
 
+    socket.on("onTransferOwner", (payload: TransferOwnerEventPayload) => {
+      const { groupWithNewOwner } = payload;
+      console.log("inside onTransferOwner socket event");
+      console.log(payload);
+      dispatch(updateGroup({ group: groupWithNewOwner }));
+    });
+
+    socket.on("onUserLeaveGroup", (payload: UserLeaveGroupPayload) => {
+      const { group, issuerId } = payload;
+      dispatch(updateGroup({ group }));
+      console.log({ issuerId, userId: user?.id });
+      if (issuerId == user?.id) {
+        router.push("/group");
+        dispatch(removeGroup(group));
+      }
+    });
     return () => {
       clearInterval(interval);
       socket.off("onlineGroupUsersReceived");
@@ -140,7 +156,9 @@ const GroupChanelPage = () => {
       socket.off("onGroupRemovedRecipient");
       socket.off("onUserAddedGroup");
       socket.off("recipientAddedGroup");
+      socket.off("onTransferOwner");
       socket.off("onGroup");
+      socket.off("onUserLeaveGroup");
     };
   }, [groupId]);
 
@@ -148,6 +166,7 @@ const GroupChanelPage = () => {
     setMsg(event.target.value);
   };
 
+  console.log({ owner: speceficGroup?.owner });
   const handleSubmitMessage = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -174,7 +193,8 @@ const GroupChanelPage = () => {
         <div className="bg-blackSmooth col-span-9  flex flex-row-reverse justify-between  p-6 items-center h-[75px]  w-full">
           <div className=" flex justify-between items-center   border-b  ml-5   ">
             <div className="md:mr-5 md:-p-2  mr-2">
-              <GroupModal />
+              {(speceficGroup?.creator?.id == user?.id ||
+                speceficGroup?.owner?.id == user?.id) && <GroupModal />}
             </div>
             <div className=" flex justify-center items-center -mr-3 md:mr-1.5 ">
               <UserGroupIcon className="text-textInner w-8 h-8 " />

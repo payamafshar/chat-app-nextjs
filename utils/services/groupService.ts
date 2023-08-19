@@ -38,3 +38,7 @@ export function patchTransferAdmin(data: TransferAdminParams) {
     username: data.username,
   });
 }
+
+export function postUserLeaveGroup(groupId: number) {
+  return http.post(`group/${groupId}/leave`);
+}

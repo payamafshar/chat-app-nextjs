@@ -113,6 +113,7 @@ const groupSlice = createSlice({
 
       state.groups[groupIndex] = action.payload.data;
     });
+
     // builder.addCase(deleteUserFromGroupThunk.fulfilled, (state, action) => {
     //   const {
     //     recipientId,

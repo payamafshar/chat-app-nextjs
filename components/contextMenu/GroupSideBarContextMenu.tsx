@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import {
   deleteUserFromGroupThunk,
   transferAdminThunk,
+  userLeaveGroupThunk,
 } from "../../store/groups/thunkGroups";
 import { toggleUserContextMenu } from "../../store/groupParticipentContainerSlice";
 import { selectGroupById, updateGroup } from "../../store/groups/groupSlice";
@@ -24,6 +25,7 @@ const GroupSideBarContextMenu = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
+  console.log(speceficGroup?.creator);
   const handleDeleteUserFromGroup = () => {
     const grouId = Number(groupId);
     const data = {
@@ -46,6 +48,12 @@ const GroupSideBarContextMenu = () => {
 
     dispatch(toggleUserContextMenu(false));
   };
+
+  const handleUserLeave = () => {
+    const grouId = Number(groupId);
+    dispatch(userLeaveGroupThunk(grouId));
+    dispatch(toggleUserContextMenu(false));
+  };
   return (
     <div>
       <div
@@ -55,7 +63,7 @@ const GroupSideBarContextMenu = () => {
         }}
         className={`bg-blackSmooth z-50 flex flex-col justify-start items-start rounded-md w-36  px-4 fixed  cursor-pointer`}
       >
-        {speceficGroup?.creator.id == user?.id ? (
+        {speceficGroup?.creator?.id == user?.id ? (
           <ul className="flex flex-col justify-center  items-start py-4">
             <li
               onClick={handleDeleteUserFromGroup}
@@ -75,8 +83,11 @@ const GroupSideBarContextMenu = () => {
             >
               Transfer Owner
             </li>
-            <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
-              Edit
+            <li
+              onClick={handleUserLeave}
+              className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner"
+            >
+              Leave
             </li>
           </ul>
         ) : speceficGroup?.owner?.id == user?.id ? (
@@ -90,11 +101,23 @@ const GroupSideBarContextMenu = () => {
             <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
               Add User
             </li>
+            <li
+              onClick={handleUserLeave}
+              className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner"
+            >
+              Leave
+            </li>
           </ul>
         ) : (
           <ul className="flex flex-col justify-center  items-start py-4">
             <li className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner">
               Profile
+            </li>
+            <li
+              onClick={handleUserLeave}
+              className="text-white px-1 py-2 font-semibold rounded-md hover:text-textInner"
+            >
+              Leave
             </li>
           </ul>
         )}

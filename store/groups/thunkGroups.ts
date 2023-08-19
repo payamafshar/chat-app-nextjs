@@ -5,6 +5,7 @@ import {
   getGroups,
   patchTransferAdmin,
   postAddUserToGroup,
+  postUserLeaveGroup,
   postcreateGroup,
 } from "../../utils/services/groupService";
 import {
@@ -48,5 +49,12 @@ export const transferAdminThunk = createAsyncThunk(
   "fetchById/group",
   async (data: TransferAdminParams) => {
     return patchTransferAdmin(data);
+  }
+);
+
+export const userLeaveGroupThunk = createAsyncThunk(
+  "user/leave",
+  async (groupId: number) => {
+    return postUserLeaveGroup(groupId);
   }
 );

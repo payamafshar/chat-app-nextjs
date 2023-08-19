@@ -184,3 +184,13 @@ export type TransferAdminParams = {
   username: string;
   groupId: number;
 };
+
+export type TransferOwnerEventPayload = {
+  groupWithNewOwner: Group;
+  newOwnerId: number;
+};
+
+export type UserLeaveGroupPayload = {
+  issuerId: number;
+  group: Group;
+};
