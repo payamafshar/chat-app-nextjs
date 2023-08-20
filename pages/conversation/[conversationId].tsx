@@ -106,13 +106,14 @@ const ConversationChanellPage = () => {
     // fireing subscribe message Event On BackEnd and that event sendUser status typing
     //on another event(userStartTyping, userStopTyping) and we listen that events to get recipient status
     // on above useEffect beacuse on backEnd rooms emit event for connected user expet himself
+    console.log(typing);
     if (typing) {
       clearTimeout(timer);
       setTimer(
         setTimeout(() => {
           console.log("user is stop ");
-          socket.emit("onTypingStop", { conversationId });
           setTyping(false);
+          socket.emit("onTypingStop", { conversationId });
         }, 2000)
       );
     } else {
@@ -132,10 +133,11 @@ const ConversationChanellPage = () => {
     event.preventDefault();
     const convNumber = Number(conversationId);
     const data = { conversationId: convNumber, content: msg };
-
+    socket.emit("onTypingStop", { conversationId });
     dispatch(createConversationMessageThunk(data));
 
     setMsg("");
+    // setTyping(false);
   };
 
   return (
@@ -175,10 +177,8 @@ const ConversationChanellPage = () => {
               className=" w-full p-5 ml-5 h-[55px] outline-none bg-inputBgDark text-textInner font-semibold text-md  px-6 rounded-md placeholder: "
             />
           </form>
-          {recipientTyping && <div> typing... </div>}
         </div>
       </div>
-      <div></div>
     </div>
   );
 };

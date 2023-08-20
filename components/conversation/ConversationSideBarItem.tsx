@@ -18,6 +18,7 @@ const ConversationSideBarItem: React.FC<Props> = ({ conversation }) => {
     router.push(`/conversation/${id}`);
   };
 
+  console.log({ lastMessageSent });
   return (
     <>
       <div
