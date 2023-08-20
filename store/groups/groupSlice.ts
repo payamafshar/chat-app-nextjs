@@ -3,6 +3,7 @@ import {
   AddUserToGroupResponse,
   DeleteUserFromGroupResponse,
   Group,
+  Points,
   UpdateGroupAction,
   UpdateGroupPayload,
 } from "../../utils/types/types";
@@ -18,10 +19,15 @@ import { group } from "console";
 
 interface GroupState {
   groups: Group[];
+  showGroupListContextMenu: boolean;
+  selectedGroup?: Group;
+  groupPoints: Points;
 }
 
 const initialState: GroupState = {
   groups: [],
+  showGroupListContextMenu: false,
+  groupPoints: { x: 0, y: 0 },
 };
 
 const groupSlice = createSlice({
@@ -29,10 +35,18 @@ const groupSlice = createSlice({
   initialState,
 
   reducers: {
+    setGroupListContextMenuLocation: (state, action: PayloadAction<Points>) => {
+      state.groupPoints = action.payload;
+    },
+    setSelectedGroup: (state, action: PayloadAction<Group>) => {
+      state.selectedGroup = action.payload;
+    },
+    toggleGroupListContextMenu: (state, action: PayloadAction<boolean>) => {
+      state.showGroupListContextMenu = action.payload;
+    },
     addGroup: (state, action: PayloadAction<Group>) => {
       state.groups.unshift(action.payload);
     },
-
     updateGroup: (state, action: PayloadAction<UpdateGroupPayload>) => {
       const { group, type } = action.payload;
 
@@ -143,6 +157,9 @@ export const {
   updateGroup,
   addUserToGroup,
   deleteUserFromGroupReducer,
+  setGroupListContextMenuLocation,
+  toggleGroupListContextMenu,
+  setSelectedGroup,
   removeGroup,
 } = groupSlice.actions;
 

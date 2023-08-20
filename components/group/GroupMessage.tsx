@@ -100,6 +100,7 @@ const GroupMessage: React.FC<Props> = ({ online }) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     user: User
   ) => {
+    e.preventDefault();
     dispatch(toggleUserContextMenu(true));
     dispatch(setUserContextMenuLocation({ x: e.pageX, y: e.pageY }));
     dispatch(setSelectedUser(user));

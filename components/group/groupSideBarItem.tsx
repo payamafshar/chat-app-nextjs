@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Group } from "../../utils/types/types";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import { userLeaveGroupThunk } from "../../store/groups/thunkGroups";
+import {
+  setGroupListContextMenuLocation,
+  setSelectedGroup,
+  toggleGroupListContextMenu,
+} from "../../store/groups/groupSlice";
+import GroupListContextMenu from "../contextMenu/GroupListContextMenu";
 
 type Props = {
   group: Group;
@@ -13,7 +19,16 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
   const router = useRouter();
 
   const { id, title, lastMessageSent } = group;
+  const showGroupListContextMenu = useSelector(
+    (state: RootState) => state.groups.showGroupListContextMenu
+  );
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const handleClick = () => dispatch(toggleGroupListContextMenu(false));
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
   const handleClick = (id: number) => {
     router.push(`/group/${id}`);
   };
@@ -22,10 +37,19 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
     dispatch(userLeaveGroupThunk(id));
     console.log("right clicked");
   };
+
+  const handleGroupListContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    dispatch(setGroupListContextMenuLocation({ x: e.pageX, y: e.pageY }));
+    dispatch(toggleGroupListContextMenu(true));
+    dispatch(setSelectedGroup(group));
+  };
   return (
     <>
       <div
-        onContextMenu={handleUserLeave}
+        onContextMenu={(e) => handleGroupListContextMenu(e)}
         onClick={() => handleClick(id)}
         className="flex mt-4 cursor-pointer "
       >
@@ -43,6 +67,7 @@ const GroupSideBarItem: React.FC<Props> = ({ group }) => {
           </span>
         </div>
       </div>
+      {showGroupListContextMenu && <GroupListContextMenu />}
     </>
   );
 };
